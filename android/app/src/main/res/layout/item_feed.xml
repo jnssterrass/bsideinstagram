@@ -42,14 +42,6 @@
                 android:layout_height="match_parent"
                 android:layout_marginBottom="8dp"/>
 
-            <!--
-            <ImageView
-                android:id="@+id/ivFeedCenter"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:scaleType="centerCrop" />
-                -->
-
             <View
                 android:id="@+id/vBgLike"
                 android:layout_width="match_parent"

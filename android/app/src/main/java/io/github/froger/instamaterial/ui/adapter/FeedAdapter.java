@@ -1,12 +1,10 @@
 package io.github.froger.instamaterial.ui.adapter;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
@@ -190,9 +188,6 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
         @BindView(R.id.viewPager)
         ViewPager viewPager;
-
-        @BindView(R.id.ivFeedCenter)
-        ImageView ivFeedCenter;
         @BindView(R.id.tvFeedBottom)
         TextView tvFeedBottom;
         @BindView(R.id.btnComments)
@@ -230,18 +225,20 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             int adapterPosition = getAdapterPosition();
             int textPos = adapterPosition % textArray.length;
             int imagePos = adapterPosition % imageArray.length;
+            int tagPos = adapterPosition % tagArray.length;
 
             final ArrayList<String> images = new ArrayList<>();
             images.add(imageArray[imagePos]);
             ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(view.getContext(), images);
             viewPager.setAdapter(viewPagerAdapter);
 
-            addBSide(images);
+            // TODO Dont comment this if you want to have slide
+            //addBSide(images);
 
             tvFeedBottom.setText(textArray[textPos]);
-            String hashtags = "#" + tagArray[pos] + " #InternationalDayOfAnimals" + " #Bside";
 
-            tvFeedBottom.setText(textArray[pos] + " " + hashtags);
+            String hashtags = "#" + tagArray[tagPos] + " #InternationalDayOfAnimals" + " #Bside";
+            tvFeedBottom.setText(textArray[tagPos] + " " + hashtags);
             btnLike.setImageResource(feedItem.isLiked ? R.drawable.ic_heart_red : R.drawable.ic_heart_outline_grey);
             tsLikesCounter.setCurrentText(vImageRoot.getResources().getQuantityString(
                     R.plurals.likes_count, feedItem.likesCount, feedItem.likesCount
@@ -253,7 +250,7 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     new GoogleVisionController.OnImageResponse() {
                         @Override
                         public void onImageResponse(List<AnnotateImageResponse> responses) {
-                            if (!responses.isEmpty()) {
+                            if (!responses.isEmpty() && !responses.get(0).getLabelAnnotations().isEmpty()) {
                                 String description = responses.get(0).getLabelAnnotations().get(0).getDescription();
                                 if (responses.get(0).getLabelAnnotations().size() > 1) {
                                     description += " " + responses.get(0).getLabelAnnotations().get(1).getDescription();

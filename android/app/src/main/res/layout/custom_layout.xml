@@ -6,9 +6,8 @@
     android:layout_height="match_parent">
 
     <ImageView android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:srcCompat="@drawable/ic_global_menu_popular"
-        android:scaleType="fitXY"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
         android:adjustViewBounds="true"
         android:id="@+id/imageView" />
 

@@ -1,5 +1,6 @@
 package io.github.froger.instamaterial.ui.adapter;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.support.v4.view.ViewPager;
@@ -7,6 +8,7 @@ import android.support.v7.widget.LinearLayoutCompat;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
@@ -73,6 +75,7 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         return null;
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     private void setupClickableViews(final View view, final CellFeedViewHolder cellFeedViewHolder) {
         cellFeedViewHolder.btnComments.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -86,9 +89,10 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 onFeedItemClickListener.onMoreClick(v, cellFeedViewHolder.getAdapterPosition());
             }
         });
-        cellFeedViewHolder.ivFeedCenter.setOnClickListener(new View.OnClickListener() {
+        cellFeedViewHolder.viewPager.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Log.e("TAG", "ei");
                 int adapterPosition = cellFeedViewHolder.getAdapterPosition();
                 feedItems.get(adapterPosition).likesCount++;
                 notifyItemChanged(adapterPosition, ACTION_LIKE_IMAGE_CLICKED);
@@ -195,7 +199,7 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         @BindView(R.id.viewPager)
         ViewPager viewPager;
 
-        @BindView(R.id.ivFeedCenter)
+        //@BindView(R.id.ivFeedCenter)
         ImageView ivFeedCenter;
         @BindView(R.id.tvFeedBottom)
         TextView tvFeedBottom;
@@ -243,7 +247,9 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             // TODO Uncomment when Vision is needed
             // GoogleVisionController.getInstance(view.getContext()).getLabels(url);
 
-            tvFeedBottom.setText(textArray[pos]);
+            String hashtags = "#" + tagArray[pos] + " #InternationalDayOfAnimals" + " #Bside";
+
+            tvFeedBottom.setText(textArray[pos] + " " + hashtags);
             btnLike.setImageResource(feedItem.isLiked ? R.drawable.ic_heart_red : R.drawable.ic_heart_outline_grey);
             tsLikesCounter.setCurrentText(vImageRoot.getResources().getQuantityString(
                     R.plurals.likes_count, feedItem.likesCount, feedItem.likesCount

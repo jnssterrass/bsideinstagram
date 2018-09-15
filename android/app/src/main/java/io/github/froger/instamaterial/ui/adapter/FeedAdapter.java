@@ -240,6 +240,9 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(view.getContext(), images);
             viewPager.setAdapter(viewPagerAdapter);
 
+            // TODO Uncomment when Vision is needed
+            // GoogleVisionController.getInstance(view.getContext()).getLabels(url);
+
             tvFeedBottom.setText(textArray[pos]);
             btnLike.setImageResource(feedItem.isLiked ? R.drawable.ic_heart_red : R.drawable.ic_heart_outline_grey);
             tsLikesCounter.setCurrentText(vImageRoot.getResources().getQuantityString(

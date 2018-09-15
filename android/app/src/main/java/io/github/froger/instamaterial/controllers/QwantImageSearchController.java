@@ -37,7 +37,7 @@ public class QwantImageSearchController {
                 .appendQueryParameter("uiv", "4");
         String url = builder.build().toString();
 
-        Log.e("TAG", url);
+        Log.e(TAG, url);
 
         // Request a string response from the provided URL.
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null,

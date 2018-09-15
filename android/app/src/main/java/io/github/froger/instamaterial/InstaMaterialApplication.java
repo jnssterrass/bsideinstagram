@@ -13,6 +13,7 @@ import timber.log.Timber;
  * Created by froger_mcs on 05.11.14.
  */
 public class InstaMaterialApplication extends Application implements QwantImageSearchController.QwantImageSearchResolvedCallback {
+    private final String TAG = InstaMaterialApplication.class.getSimpleName();
     private final QwantImageSearchController.QwantImageSearchResolvedCallback qwantImageSearchResolvedCallback = this;
     private QwantImageSearchController qwantImageSearchController;
 
@@ -29,7 +30,7 @@ public class InstaMaterialApplication extends Application implements QwantImageS
     @Override
     public void onQwantImageSearchResolved(ArrayList<QwantImage> qwantImagesArray) {
         for(int i = 0; i < qwantImagesArray.size(); ++i) {
-            Log.e("TAG", qwantImagesArray.get(i).getMedia());
+            Log.e(TAG, qwantImagesArray.get(i).getMedia());
         }
     }
 }

@@ -57,8 +57,8 @@ public class GoogleVisionController {
         }
     }
 
-    public void getLabels() {
-        Image image = new Image().setSource(new ImageSource().setImageUri("https://images-na.ssl-images-amazon.com/images/I/51OdJnYY83L._SL500_AC_SS350_.jpg"));
+    public void getLabels(String url) {
+        Image image = new Image().setSource(new ImageSource().setImageUri(url));
         Feature desiredFeature = new Feature();
         desiredFeature.setType("LABEL_DETECTION");
 

@@ -18,7 +18,6 @@ import butterknife.BindView;
 import butterknife.OnClick;
 import io.github.froger.instamaterial.R;
 import io.github.froger.instamaterial.Utils;
-import io.github.froger.instamaterial.controllers.GoogleVisionController;
 import io.github.froger.instamaterial.ui.adapter.FeedAdapter;
 import io.github.froger.instamaterial.ui.adapter.FeedItemAnimator;
 import io.github.froger.instamaterial.ui.view.FeedContextMenu;
@@ -54,8 +53,6 @@ public class MainActivity extends BaseDrawerActivity implements FeedAdapter.OnFe
         } else {
             feedAdapter.updateItems(false);
         }
-
-        GoogleVisionController.getInstance(this).getLabels();
     }
 
     private void setupFeed() {

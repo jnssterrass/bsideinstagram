@@ -223,7 +223,12 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             this.feedItem = feedItem;
             int adapterPosition = getAdapterPosition();
 
-            ImageRequest request = new ImageRequest(imageArray[adapterPosition % imageArray.length],
+            final String url = imageArray[adapterPosition % imageArray.length];
+
+            // TODO Uncomment when Vision is needed
+            // GoogleVisionController.getInstance(view.getContext()).getLabels(url);
+            
+            ImageRequest request = new ImageRequest(url,
                     new Response.Listener<Bitmap>() {
                         @Override
                         public void onResponse(Bitmap bitmap) {

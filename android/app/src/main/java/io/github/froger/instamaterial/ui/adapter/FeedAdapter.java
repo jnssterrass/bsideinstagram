@@ -1,8 +1,10 @@
 package io.github.froger.instamaterial.ui.adapter;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.support.v7.widget.LinearLayoutCompat;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +12,11 @@ import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextSwitcher;
+import android.widget.TextView;
+
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.ImageRequest;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -18,6 +25,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.github.froger.instamaterial.R;
+import io.github.froger.instamaterial.controller.VolleyController;
 import io.github.froger.instamaterial.ui.activity.MainActivity;
 import io.github.froger.instamaterial.ui.view.LoadingFeedItemView;
 
@@ -174,10 +182,14 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     }
 
     public static class CellFeedViewHolder extends RecyclerView.ViewHolder {
+        private final static String TAG = CellFeedViewHolder.class.getSimpleName();
+        private final String[] textArray;
+        private final String[] imageArray;
+
         @BindView(R.id.ivFeedCenter)
         ImageView ivFeedCenter;
-        @BindView(R.id.ivFeedBottom)
-        ImageView ivFeedBottom;
+        @BindView(R.id.tvFeedBottom)
+        TextView tvFeedBottom;
         @BindView(R.id.btnComments)
         ImageButton btnComments;
         @BindView(R.id.btnLike)
@@ -196,17 +208,36 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         FrameLayout vImageRoot;
 
         FeedItem feedItem;
+        View view;
 
         public CellFeedViewHolder(View view) {
             super(view);
+
+            this.view = view;
+            textArray = view.getContext().getResources().getStringArray(R.array.feed_text);
+            imageArray = view.getContext().getResources().getStringArray(R.array.feed_image);
             ButterKnife.bind(this, view);
         }
 
         public void bindView(FeedItem feedItem) {
             this.feedItem = feedItem;
             int adapterPosition = getAdapterPosition();
-            ivFeedCenter.setImageResource(adapterPosition % 2 == 0 ? R.drawable.img_feed_center_1 : R.drawable.img_feed_center_2);
-            ivFeedBottom.setImageResource(adapterPosition % 2 == 0 ? R.drawable.img_feed_bottom_1 : R.drawable.img_feed_bottom_2);
+
+            ImageRequest request = new ImageRequest(imageArray[adapterPosition % imageArray.length],
+                    new Response.Listener<Bitmap>() {
+                        @Override
+                        public void onResponse(Bitmap bitmap) {
+                            ivFeedCenter.setImageBitmap(bitmap);
+                        }
+                    }, 0, 0, null,
+                    new Response.ErrorListener() {
+                        public void onErrorResponse(VolleyError error) {
+                            Log.e(TAG, "Error downloading image");
+                        }
+                    });
+            VolleyController.getInstance(view.getContext()).addToQueue(request);
+
+            tvFeedBottom.setText(textArray[adapterPosition % textArray.length]);
             btnLike.setImageResource(feedItem.isLiked ? R.drawable.ic_heart_red : R.drawable.ic_heart_outline_grey);
             tsLikesCounter.setCurrentText(vImageRoot.getResources().getQuantityString(
                     R.plurals.likes_count, feedItem.likesCount, feedItem.likesCount

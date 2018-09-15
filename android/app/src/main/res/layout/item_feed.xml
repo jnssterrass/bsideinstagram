@@ -47,8 +47,8 @@
 
         </io.github.froger.instamaterial.ui.view.SquaredFrameLayout>
 
-        <ImageView
-            android:id="@+id/ivFeedBottom"
+        <TextView
+            android:id="@+id/tvFeedBottom"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 

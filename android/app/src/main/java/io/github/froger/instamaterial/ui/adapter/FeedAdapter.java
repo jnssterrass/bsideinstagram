@@ -1,10 +1,12 @@
 package io.github.froger.instamaterial.ui.adapter;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
@@ -81,7 +83,7 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 onFeedItemClickListener.onMoreClick(v, cellFeedViewHolder.getAdapterPosition());
             }
         });
-        cellFeedViewHolder.ivFeedCenter.setOnClickListener(new View.OnClickListener() {
+        cellFeedViewHolder.viewPager.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 int adapterPosition = cellFeedViewHolder.getAdapterPosition();
@@ -237,6 +239,9 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             addBSide(images);
 
             tvFeedBottom.setText(textArray[textPos]);
+            String hashtags = "#" + tagArray[pos] + " #InternationalDayOfAnimals" + " #Bside";
+
+            tvFeedBottom.setText(textArray[pos] + " " + hashtags);
             btnLike.setImageResource(feedItem.isLiked ? R.drawable.ic_heart_red : R.drawable.ic_heart_outline_grey);
             tsLikesCounter.setCurrentText(vImageRoot.getResources().getQuantityString(
                     R.plurals.likes_count, feedItem.likesCount, feedItem.likesCount

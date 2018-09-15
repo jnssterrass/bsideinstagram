@@ -1,7 +1,6 @@
 package io.github.froger.instamaterial.controllers;
 
 import android.content.Context;
-import android.util.Log;
 
 import com.google.api.client.extensions.android.json.AndroidJsonFactory;
 import com.google.api.client.http.javanet.NetHttpTransport;
@@ -57,7 +56,7 @@ public class GoogleVisionController {
         }
     }
 
-    public void getLabels(String url) {
+    public void getLabels(String url, final OnImageResponse onImageResponse) {
         Image image = new Image().setSource(new ImageSource().setImageUri(url));
         Feature desiredFeature = new Feature();
         desiredFeature.setType("LABEL_DETECTION");
@@ -74,17 +73,18 @@ public class GoogleVisionController {
             public void run() {
                 try {
                     BatchAnnotateImagesResponse batchResponse = vision.images().annotate(batchRequest).execute();
-
                     List<AnnotateImageResponse> responses = batchResponse.getResponses();
 
-                    for (int i = 0; i < responses.size(); ++i) {
-                        Log.e(TAG, responses.get(i).toPrettyString());
-                    }
+                    onImageResponse.onImageResponse(responses);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
             }
         });
         thread.start();
+    }
+
+    public interface OnImageResponse {
+        void onImageResponse(List<AnnotateImageResponse> imageResponses);
     }
 }

@@ -14,6 +14,8 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageRequest;
 
+import java.util.ArrayList;
+
 import io.github.froger.instamaterial.R;
 import io.github.froger.instamaterial.controllers.VolleyController;
 
@@ -21,18 +23,16 @@ public class ViewPagerAdapter extends PagerAdapter {
     private Context context;
     private LayoutInflater layoutInflater;
 
-    private String[] imagesArray;
+    private ArrayList<String> imagesArray;
 
-    public ViewPagerAdapter(Context context, String[] imagesArray) {
-        Log.e("TAG", "Hello");
+    public ViewPagerAdapter(Context context, ArrayList<String> imagesArray) {
         this.context = context;
-
         this.imagesArray = imagesArray;
     }
 
     @Override
     public int getCount() {
-        return imagesArray.length;
+        return imagesArray.size();
     }
 
     @Override
@@ -46,7 +46,7 @@ public class ViewPagerAdapter extends PagerAdapter {
         final View view = layoutInflater.inflate(R.layout.custom_layout, null);
 
         final ImageView imageView = (ImageView) view.findViewById(R.id.imageView);
-        ImageRequest request = new ImageRequest(imagesArray[position % imagesArray.length],
+        ImageRequest request = new ImageRequest(imagesArray.get(position % imagesArray.size()),
                 new Response.Listener<Bitmap>() {
                     @Override
                     public void onResponse(Bitmap bitmap) {

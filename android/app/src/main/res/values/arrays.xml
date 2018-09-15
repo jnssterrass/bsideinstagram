@@ -18,4 +18,18 @@
         <item>https://cdn.appgrid.accedo.tv/content/file/57f3c7409a28fb021e652c81</item>
     </string-array>
 
+    <string-array name="feed_image2" formatted="false">
+        <item>https://blogs.sandiegozoo.org/wp-content/uploads/2015/05/T-1661.jpg</item>
+        <item>https://c8.alamy.com/comp/B8CDRT/dead-rhino-B8CDRT.jpg</item>
+        <item>https://c8.alamy.com/comp/B8CDRT/dead-rhino-B8CDRT.jpg</item>
+        <item>https://blogs.sandiegozoo.org/wp-content/uploads/2015/05/T-1661.jpg</item>
+    </string-array>
+
+    <string-array name="feed_tag" formatted="false">
+        <item>rhino</item>
+        <item>zebra</item>
+        <item>lion</item>
+        <item>cat</item>
+    </string-array>
+
 </resources>

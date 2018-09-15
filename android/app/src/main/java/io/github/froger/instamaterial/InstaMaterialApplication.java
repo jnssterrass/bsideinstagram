@@ -21,9 +21,13 @@ public class InstaMaterialApplication extends Application implements QwantImageS
         super.onCreate();
         Timber.plant(new Timber.DebugTree());
 
+        /*
         qwantImageSearchController = new QwantImageSearchController(this);
-        String queryString = "rhino corpse dead";
-        qwantImageSearchController.qwantImageSearchRequest(queryString, qwantImageSearchResolvedCallback);
+        qwantImageSearchController.qwantImageSearchRequest("rhino horn", qwantImageSearchResolvedCallback);
+        qwantImageSearchController.qwantImageSearchRequest("rhino dead", qwantImageSearchResolvedCallback);
+        qwantImageSearchController.qwantImageSearchRequest("real zebra carpet", qwantImageSearchResolvedCallback);
+        qwantImageSearchController.qwantImageSearchRequest("zebra dead", qwantImageSearchResolvedCallback);
+        */
     }
 
     @Override

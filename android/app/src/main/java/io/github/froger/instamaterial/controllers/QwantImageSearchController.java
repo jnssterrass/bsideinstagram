@@ -33,6 +33,7 @@ public class QwantImageSearchController {
                 .appendPath("search")
                 .appendPath("images")
                 .appendQueryParameter("q", queryString)
+                .appendQueryParameter("count", "1")
                 .appendQueryParameter("t", "images")
                 .appendQueryParameter("uiv", "4");
         String url = builder.build().toString();

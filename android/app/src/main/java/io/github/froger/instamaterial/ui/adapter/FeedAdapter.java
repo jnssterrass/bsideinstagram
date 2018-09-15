@@ -2,6 +2,7 @@ package io.github.froger.instamaterial.ui.adapter;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutCompat;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -25,7 +26,9 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.github.froger.instamaterial.R;
+import io.github.froger.instamaterial.controllers.QwantImageSearchController;
 import io.github.froger.instamaterial.controllers.VolleyController;
+import io.github.froger.instamaterial.models.QwantImage;
 import io.github.froger.instamaterial.ui.activity.MainActivity;
 import io.github.froger.instamaterial.ui.view.LoadingFeedItemView;
 
@@ -48,6 +51,7 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     public FeedAdapter(Context context) {
         this.context = context;
+
     }
 
     @Override
@@ -185,6 +189,11 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         private final static String TAG = CellFeedViewHolder.class.getSimpleName();
         private final String[] textArray;
         private final String[] imageArray;
+        private final String[] imageArray2;
+        private final String[] tagArray;
+
+        @BindView(R.id.viewPager)
+        ViewPager viewPager;
 
         @BindView(R.id.ivFeedCenter)
         ImageView ivFeedCenter;
@@ -216,28 +225,22 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             this.view = view;
             textArray = view.getContext().getResources().getStringArray(R.array.feed_text);
             imageArray = view.getContext().getResources().getStringArray(R.array.feed_image);
+            imageArray2 = view.getContext().getResources().getStringArray(R.array.feed_image2);
+            tagArray = view.getContext().getResources().getStringArray(R.array.feed_tag);
             ButterKnife.bind(this, view);
         }
 
         public void bindView(FeedItem feedItem) {
             this.feedItem = feedItem;
             int adapterPosition = getAdapterPosition();
+            int pos = adapterPosition % textArray.length;
 
-            ImageRequest request = new ImageRequest(imageArray[adapterPosition % imageArray.length],
-                    new Response.Listener<Bitmap>() {
-                        @Override
-                        public void onResponse(Bitmap bitmap) {
-                            ivFeedCenter.setImageBitmap(bitmap);
-                        }
-                    }, 0, 0, null,
-                    new Response.ErrorListener() {
-                        public void onErrorResponse(VolleyError error) {
-                            Log.e(TAG, "Error downloading image");
-                        }
-                    });
-            VolleyController.getInstance(view.getContext()).addToQueue(request);
+            String[] images = {imageArray[pos], imageArray2[pos]};
 
-            tvFeedBottom.setText(textArray[adapterPosition % textArray.length]);
+            ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(view.getContext(), images);
+            viewPager.setAdapter(viewPagerAdapter);
+
+            tvFeedBottom.setText(textArray[pos]);
             btnLike.setImageResource(feedItem.isLiked ? R.drawable.ic_heart_red : R.drawable.ic_heart_outline_grey);
             tsLikesCounter.setCurrentText(vImageRoot.getResources().getQuantityString(
                     R.plurals.likes_count, feedItem.likesCount, feedItem.likesCount

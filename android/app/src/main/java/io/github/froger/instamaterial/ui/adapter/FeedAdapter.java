@@ -234,6 +234,16 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(view.getContext(), images);
             viewPager.setAdapter(viewPagerAdapter);
 
+            addBSide(images);
+
+            tvFeedBottom.setText(textArray[textPos]);
+            btnLike.setImageResource(feedItem.isLiked ? R.drawable.ic_heart_red : R.drawable.ic_heart_outline_grey);
+            tsLikesCounter.setCurrentText(vImageRoot.getResources().getQuantityString(
+                    R.plurals.likes_count, feedItem.likesCount, feedItem.likesCount
+            ));
+        }
+
+        private void addBSide(final ArrayList<String> images) {
             GoogleVisionController.getInstance(view.getContext()).getLabels(images.get(0),
                     new GoogleVisionController.OnImageResponse() {
                         @Override
@@ -260,12 +270,6 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                             }
                         }
                     });
-
-            tvFeedBottom.setText(textArray[textPos]);
-            btnLike.setImageResource(feedItem.isLiked ? R.drawable.ic_heart_red : R.drawable.ic_heart_outline_grey);
-            tsLikesCounter.setCurrentText(vImageRoot.getResources().getQuantityString(
-                    R.plurals.likes_count, feedItem.likesCount, feedItem.likesCount
-            ));
         }
 
         public FeedItem getFeedItem() {

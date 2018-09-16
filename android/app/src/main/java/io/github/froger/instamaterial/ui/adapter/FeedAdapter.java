@@ -1,7 +1,10 @@
 package io.github.froger.instamaterial.ui.adapter;
 
+import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.os.Handler;
 import android.support.v7.widget.LinearLayoutCompat;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -50,6 +53,8 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private OnFeedItemClickListener onFeedItemClickListener;
 
     private boolean showLoadingView = false;
+    private ProgressDialog dialog;
+    private Handler handler = new Handler();
 
     public FeedAdapter(Context context) {
         this.context = context;
@@ -112,6 +117,9 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         cellFeedViewHolder.btnBSide.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                dialog = ProgressDialog.show(context, "",
+                        "Extrayendo etiquetas de la imagen", true);
+
                 int adapterPosition = cellFeedViewHolder.getAdapterPosition();
                 String URL = feedItems.get(adapterPosition).URL;
                 String text = feedItems.get(adapterPosition).text;
@@ -136,28 +144,41 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                                 responses.get(0).getLabelAnnotations() != null &&
                                 !responses.get(0).getLabelAnnotations().isEmpty()) {
                             String description = responses.get(0).getLabelAnnotations().get(0).getDescription();
-                                /*
-                                if (responses.get(0).getLabelAnnotations().size() > 1) {
-                                    description += " " + responses.get(0).getLabelAnnotations().get(1).getDescription();
-                                }
-                                if (responses.get(0).getLabelAnnotations().size() > 2) {
-                                    description += " " + responses.get(0).getLabelAnnotations().get(2).getDescription();
-                                }
-                                */
+
                             if (description.contains("rhino"))
                                 description += " murdered without horn";
 
-                            if (description.contains("tiger")) description += " murdered";
-                            if (description.contains("elephant")) description += " killed";
+                            if (description.contains("tiger"))
+                                description += " murdered";
+                            if (description.contains("elephant"))
+                                description += " killed";
                             if (description.contains("lion") || description.contains("zebra"))
                                 description += " dead";
                             if (description.contains("lion") || description.contains("zebra"))
                                 description += " dead";
-                            if (description.contains("leech")) description += " cosmetics";
+                            if (description.contains("leech"))
+                                description += " cosmetics";
                             if (description.contains("snail"))
                                 description = "snail cosmetics experiment acid";
 
                             Log.e("TAG", description);
+
+                            final String finalDescription = description;
+                            ((Activity) context).runOnUiThread(new Runnable() {
+                                public void run() {
+                                    handler.postDelayed(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            if (dialog != null) {
+                                                dialog.cancel();
+                                            }
+
+                                            dialog = ProgressDialog.show(context, "",
+                                                    "Buscando imagen con etiquetas:\n" + finalDescription, true);
+                                        }
+                                    }, 500);
+                                }
+                            });
 
                             if (text.contains("#bside") || text.contains("#lacarab")) {
                                 QwantImageSearchHelper.qwantImageSearchRequest(context,
@@ -165,7 +186,16 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                                             @Override
                                             public void onQwantImageSearchResolved(ArrayList<QwantImage> qwantImages) {
                                                 feedItems.get(adapterPosition).URL = qwantImages.get(0).getMedia();
-                                                notifyItemChanged(adapterPosition);
+
+                                                handler.postDelayed(new Runnable() {
+                                                    @Override
+                                                    public void run() {
+                                                        if (dialog != null) {
+                                                            dialog.cancel();
+                                                        }
+                                                        notifyItemChanged(adapterPosition);
+                                                    }
+                                                }, 2500);
                                             }
                                         });
                             }

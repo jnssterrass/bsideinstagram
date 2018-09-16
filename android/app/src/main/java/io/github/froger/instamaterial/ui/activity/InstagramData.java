@@ -1,56 +1,33 @@
 package io.github.froger.instamaterial.ui.activity;
 
 import android.content.Context;
-import android.widget.TextView;
+import android.util.Log;
 
 import com.android.volley.Request;
-import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
-import butterknife.BindView;
-import io.github.froger.instamaterial.R;
-import io.github.froger.instamaterial.ui.adapter.UserProfileAdapter;
+import io.github.froger.instamaterial.controllers.VolleyController;
 
 /**
  * Created by Albert on 16/9/2018.
  */
 
 public class InstagramData {
+    private static final String TAG = InstagramData.class.getSimpleName();
+    private static final String API_TOKEN = "288757825.37f6a41.467aaa07edf34eed802f6f8a5ca46ede";
+    private static final String BASE_URL = "https://api.instagram.com/v1/users/self/media/recent/?access_token=";
 
-    @BindView(R.id.text)
-    private TextView mTextView;
+    public static void getUrls(Context context, final OnInstagramURLsResolved onInstagramURLsResolved) {
+        String url = BASE_URL + API_TOKEN;
 
-    private UserProfileAdapter adapter;
-
-    public void setAdapter(UserProfileAdapter adapter) {
-        this.adapter = adapter;
-    }
-
-    public void setUrl(ArrayList<String> urls) {
-        this.adapter.setPhotos(urls);
-    }
-
-    public void getUrls(Context context) {
-
-        // access token
-        String token = "288757825.37f6a41.467aaa07edf34eed802f6f8a5ca46ede";
-
-        // Instantiate the RequestQueue.
-        RequestQueue queue = Volley.newRequestQueue(context);
-        String url = "https://api.instagram.com/v1/users/self/media/recent/?access_token="
-                + token;
-
-        // Request a string response from the provided URL.
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
                 new Response.Listener<String>() {
                     @Override
@@ -61,34 +38,37 @@ public class InstagramData {
                             JSONObject json = new JSONObject(response.toString());
                             JSONArray data = (JSONArray) json.get("data");
                             urls = extractUrls(data);
+                            onInstagramURLsResolved.onInstagramURLsResolved(urls);
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
-                        setUrl(urls);
                     }
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                mTextView.setText("That didn't work!");
+                Log.e(TAG, "That didn't work!");
             }
         });
 
-        // Add the request to the RequestQueue.
-        queue.add(stringRequest);
+        VolleyController.getInstance(context).addToQueue(stringRequest);
     }
 
-    private ArrayList<String> extractUrls(JSONArray data) {
+    private static ArrayList<String> extractUrls(JSONArray data) {
         ArrayList<String> urls = new ArrayList<String>();
         for (int i = 0; i < data.length(); i++) {
             try {
                 JSONObject images = (JSONObject) data.getJSONObject(i).get("images");
                 JSONObject resolution = (JSONObject) images.get("standard_resolution");
-                String url = resolution.get("url").toString();
+                String url = resolution.getString("url");
                 urls.add(url);
             } catch (JSONException e) {
                 e.printStackTrace();
             }
         }
         return urls;
+    }
+
+    public interface OnInstagramURLsResolved {
+        void onInstagramURLsResolved(ArrayList<String> urls);
     }
 }

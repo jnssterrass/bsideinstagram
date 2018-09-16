@@ -9,17 +9,17 @@
     </string-array>
 
     <string-array name="feed_image" formatted="false">
-        <item>https://i.ytimg.com/vi/sgMnEDmx2sg/maxresdefault.jpg</item>
         <item>https://i.ytimg.com/vi/SNggmeilXDQ/maxresdefault.jpg</item>
         <item>https://endimages.s3.amazonaws.com/cache/a2/4f/a24f2b9a06bce41725f883ec8af4fa29.jpg</item>
+        <item>https://i.ytimg.com/vi/sgMnEDmx2sg/maxresdefault.jpg</item>
         <item>https://media.mnn.com/assets/images/2017/11/BlackRhinoTarongaWesternPlainsZoo.jpg</item>
         <item>http://cdn.images.express.co.uk/img/dynamic/1/590x/secondary/Circus-lion-506252.jpg</item>
     </string-array>
 
     <string-array name="feed_tag">
-        <item>Snail</item>
         <item>Elephant</item>
         <item>Tiger</item>
+        <item>Snail</item>
         <item>Rhino</item>
         <item>Lion</item>
     </string-array>

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutCompat;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -233,19 +234,19 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             viewPager.setAdapter(viewPagerAdapter);
 
             // TODO Dont comment this if you want to have slide
-            //addBSide(images);
+            String text = textArray[tagPos];
+            Log.e("TAG", text + " --- #bside=" + text.contains("#bside"));
+            Log.e("TAG", text + " --- #lacarab=" + text.contains("#lacarab"));
+            //addBSide(images, textPost);
 
-            tvFeedBottom.setText(textArray[textPos]);
-
-            String hashtags = "#" + tagArray[tagPos] + " #InternationalDayOfAnimals" + " #Bside";
-            tvFeedBottom.setText(textArray[tagPos] + " " + hashtags);
+            tvFeedBottom.setText(text);
             btnLike.setImageResource(feedItem.isLiked ? R.drawable.ic_heart_red : R.drawable.ic_heart_outline_grey);
             tsLikesCounter.setCurrentText(vImageRoot.getResources().getQuantityString(
                     R.plurals.likes_count, feedItem.likesCount, feedItem.likesCount
             ));
         }
 
-        private void addBSide(final ArrayList<String> images) {
+        private void addBSide(final ArrayList<String> images, final String text) {
             GoogleVisionController.getInstance(view.getContext()).getLabels(images.get(0),
                     new GoogleVisionController.OnImageResponse() {
                         @Override
@@ -259,16 +260,18 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                                     description += " " + responses.get(0).getLabelAnnotations().get(2).getDescription();
                                 }
 
-                                QwantImageSearchHelper.qwantImageSearchRequest(view.getContext(),
-                                        description, new QwantImageSearchHelper.QwantImageSearchResolvedCallback() {
-                                            @Override
-                                            public void onQwantImageSearchResolved(ArrayList<QwantImage> qwantImages) {
-                                                images.add(qwantImages.get(0).getMedia());
+                                if (text.contains("#bside") || text.contains("#lacarab")) {
+                                    QwantImageSearchHelper.qwantImageSearchRequest(view.getContext(),
+                                            description, new QwantImageSearchHelper.QwantImageSearchResolvedCallback() {
+                                                @Override
+                                                public void onQwantImageSearchResolved(ArrayList<QwantImage> qwantImages) {
+                                                    images.add(qwantImages.get(0).getMedia());
 
-                                                ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(view.getContext(), images);
-                                                viewPager.setAdapter(viewPagerAdapter);
-                                            }
-                                        });
+                                                    ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(view.getContext(), images);
+                                                    viewPager.setAdapter(viewPagerAdapter);
+                                                }
+                                            });
+                                }
                             }
                         }
                     });

@@ -223,7 +223,7 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                                         });
 
                                 ArrayList<String> tags = new ArrayList<>();
-                                Collections.addAll(tags, description.split(" "));
+                                Collections.addAll(tags, orig_description.split(" "));
                                 tags.add("traffic");
                                 tags.add("illegal");
                                 tags.add("conservation");

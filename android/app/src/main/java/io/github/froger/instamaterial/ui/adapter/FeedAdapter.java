@@ -25,9 +25,9 @@ import com.google.api.services.vision.v1.model.EntityAnnotation;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.HashMap;
 import java.util.Random;
 
 import butterknife.BindView;
@@ -151,6 +151,7 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                             String orig_description = "";
                             Map<String, String> map = new HashMap<String, String>();
                             map.put("rhino", "murdered without horn");
+                            map.put("rhinoceros", "murdered without horn");
                             map.put("tiger", "murdered");
                             map.put("elephant", "killed");
                             map.put("lion", "dead");

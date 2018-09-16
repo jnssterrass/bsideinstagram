@@ -39,7 +39,7 @@ public class NewsData {
                     public void onResponse(String response) {
                         ArrayList<String> urls;
                         try {
-                            JSONObject json = new JSONObject(response.toString());
+                            JSONObject json = new JSONObject(response);
                             JSONArray data = (JSONArray) json.get("articles");
                             urls = extractUrls(data);
                             onNewsURLsResolved.onNewsURLsResolved(urls);

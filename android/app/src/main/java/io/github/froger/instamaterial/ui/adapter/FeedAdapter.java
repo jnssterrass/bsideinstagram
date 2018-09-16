@@ -263,11 +263,11 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                                     description += " " + responses.get(0).getLabelAnnotations().get(2).getDescription();
                                 }
                                 */
-                                if (description.contains("rhino")) description = "rhino";
+                                if (description.contains("rhino")) description += " murdered without horn";
 
                                 if (description.contains("tiger")) description += " murdered";
                                 if (description.contains("elephant")) description += " killed";
-                                if (description.contains("rhino") || description.contains("lion") || description.contains("zebra"))
+                                if (description.contains("lion") || description.contains("zebra"))
                                     description += " dead";
 
 

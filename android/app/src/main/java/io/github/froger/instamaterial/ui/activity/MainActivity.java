@@ -60,9 +60,6 @@ public class MainActivity extends BaseDrawerActivity implements FeedAdapter.OnFe
         } else {
             feedAdapter.updateItems(imageURLArray, usernameArray, textArray, false);
         }
-
-        InstagramDataController urlsgetter = new InstagramDataController();
-        InstagramDataController.getUrls(this, this);
     }
 
     private void setupFeed() {

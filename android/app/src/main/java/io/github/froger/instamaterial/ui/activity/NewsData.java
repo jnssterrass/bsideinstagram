@@ -27,7 +27,7 @@ public class NewsData {
     private static final String BASE_URL = "https://newsapi.org/v2/everything?";
     private static final String LANGUAGE = "en";
 
-    public static void getUrls(Context context, final OnNewsURLsResolved onNewsURLsResolved, ArrayList<String> tags) {
+    public static void getUrls(Context context, ArrayList<String> tags, final OnNewsURLsResolved onNewsURLsResolved) {
         String q = tags.get(0);
         for (int i = 1; i < tags.size(); i++) {
                 q += " AND " + tags.get(i);

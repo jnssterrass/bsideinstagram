@@ -31,6 +31,7 @@ import io.github.froger.instamaterial.controllers.VolleyController;
 import io.github.froger.instamaterial.helpers.QwantImageSearchHelper;
 import io.github.froger.instamaterial.models.QwantImage;
 import io.github.froger.instamaterial.ui.activity.MainActivity;
+import io.github.froger.instamaterial.ui.activity.NewsData;
 import io.github.froger.instamaterial.ui.view.LoadingFeedItemView;
 
 /**
@@ -127,6 +128,7 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     }
 
     private void addBSide(final int adapterPosition, final String image, final String text) {
+        final NewsData newsData = new NewsData();
         GoogleVisionController.getInstance(context).getLabels(image,
                 new GoogleVisionController.OnImageResponse() {
                     @Override
@@ -167,6 +169,21 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                                                 notifyItemChanged(adapterPosition);
                                             }
                                         });
+
+                                ArrayList<String> tags = new ArrayList<String>();
+                                for(String word : description.split(" ")) {
+                                    tags.add(word);
+                                }
+
+                                newsData.getUrls(context, tags,
+                                        new NewsData.OnNewsURLsResolved() {
+                                    @Override
+                                    public void onNewsURLsResolved(ArrayList<String> urls) {
+                                        //feedItems.get(adapterPosition).URL = qwantImages.get(0).getMedia();
+                                        //notifyItemChanged(adapterPosition);
+                                        Log.e("TAG", urls.toString());
+                                    }
+                                });
                             }
                         }
                     }

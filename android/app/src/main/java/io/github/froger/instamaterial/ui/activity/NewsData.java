@@ -68,6 +68,7 @@ public class NewsData {
                 e.printStackTrace();
             }
         }
+        urls.add("https://newsapi.org/");
         return urls;
     }
 

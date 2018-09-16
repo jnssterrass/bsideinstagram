@@ -224,7 +224,9 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
                                 ArrayList<String> tags = new ArrayList<>();
                                 Collections.addAll(tags, description.split(" "));
-
+                                tags.add("traffic");
+                                tags.add("illegal");
+                                tags.add("conservation");
                                 NewsData.getUrls(context, tags, new NewsData.OnNewsURLsResolved() {
                                     @Override
                                     public void onNewsURLsResolved(final ArrayList<String> urls) {

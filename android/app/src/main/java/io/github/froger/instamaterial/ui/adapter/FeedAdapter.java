@@ -267,8 +267,9 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
                                 if (description.contains("tiger")) description += " murdered";
                                 if (description.contains("elephant")) description += " killed";
-                                if (description.contains("lion") || description.contains("zebra"))
-                                    description += " dead";
+                                if (description.contains("lion") || description.contains("zebra")) description += " dead";
+                                if (description.contains("leech")) description += " cosmetics";
+                                if (description.contains("snail")) description = "snail cosmetics experiment acid";
 
 
                                 Log.e("TAG", description);

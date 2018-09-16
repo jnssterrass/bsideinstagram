@@ -14,6 +14,7 @@ import android.widget.ImageView;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -34,7 +35,7 @@ public class UserProfileAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     private final Context context;
     private final int cellSize;
 
-    private final List<String> photos;
+    private List<String> photos;
 
     private boolean lockedAnimations = false;
     private int lastAnimatedItem = -1;
@@ -43,6 +44,10 @@ public class UserProfileAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         this.context = context;
         this.cellSize = Utils.getScreenWidth(context) / 3;
         this.photos = Arrays.asList(context.getResources().getStringArray(R.array.user_photos));
+    }
+
+    public void setPhotos(ArrayList<String> photos) {
+        this.photos = photos;
     }
 
     @Override

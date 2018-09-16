@@ -1,6 +1,7 @@
 package io.github.froger.instamaterial.ui.adapter;
 
 import android.content.Context;
+import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutCompat;
 import android.support.v7.widget.RecyclerView;
@@ -233,6 +234,9 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(view.getContext(), images);
             viewPager.setAdapter(viewPagerAdapter);
 
+            TabLayout tabLayout = (TabLayout) view.findViewById(R.id.tabLayout);
+            tabLayout.setupWithViewPager(viewPager, true);
+
             // TODO Dont comment this if you want to have slide
             String text = textArray[tagPos];
             addBSide(images, text);
@@ -249,7 +253,7 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     new GoogleVisionController.OnImageResponse() {
                         @Override
                         public void onImageResponse(List<AnnotateImageResponse> responses) {
-                            if (!responses.isEmpty() && !responses.get(0).getLabelAnnotations().isEmpty()) {
+                            if (responses != null && !responses.isEmpty() && !responses.get(0).getLabelAnnotations().isEmpty()) {
                                 String description = responses.get(0).getLabelAnnotations().get(0).getDescription();
                                 /*
                                 if (responses.get(0).getLabelAnnotations().size() > 1) {

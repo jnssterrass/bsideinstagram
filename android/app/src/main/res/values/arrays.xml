@@ -2,9 +2,10 @@
 <resources>
     <string-array name="feed_text">
         <item>Feed número 1 #lacarab</item>
-        <item>Feed número 2</item>
+        <item>Feed número 1 #lacarab</item>
+        <item>Feed número 2 #bside</item>
         <item>Feed número 3 #bside</item>
-        <item>Feed número 4</item>
+        <item>Feed número 4 #lacarab</item>
     </string-array>
 
     <string-array name="tags">
@@ -18,17 +19,19 @@
     </string-array>
 
     <string-array name="feed_image" formatted="false">
-        <item>http://presumedetucasa.es/wp-content/uploads/2014/07/alfombra-piel-cebra-21.jpg</item>
-        <item>http://www.elcolombiano.com/documents/10157/0/580x400/0c17/580d365/none/11101/HUBJ/image_content_30680310_20180320060858.jpg</item>
-        <item>https://s.libertaddigital.com/fotos/noticias/290/0/leon-circo.jpg</item>
+        <item>https://i.ytimg.com/vi/sgMnEDmx2sg/maxresdefault.jpg</item>
+        <item>https://i.ytimg.com/vi/SNggmeilXDQ/maxresdefault.jpg</item>
         <item>https://endimages.s3.amazonaws.com/cache/a2/4f/a24f2b9a06bce41725f883ec8af4fa29.jpg</item>
+        <item>https://media.mnn.com/assets/images/2017/11/BlackRhinoTarongaWesternPlainsZoo.jpg</item>
+        <item>http://cdn.images.express.co.uk/img/dynamic/1/590x/secondary/Circus-lion-506252.jpg</item>
     </string-array>
 
     <string-array name="feed_tag">
-        <item>Zebra</item>
+        <item>Snail</item>
+        <item>Elephant</item>
+        <item>Tiger</item>
         <item>Rhino</item>
         <item>Lion</item>
-        <item>Tiger</item>
     </string-array>
 
 </resources>

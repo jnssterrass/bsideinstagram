@@ -24,16 +24,6 @@
         <item>#lacarab</item>
     </string-array>
 
-    <string-array name="tags">
-        <item>crocodile</item>
-        <item>elephant</item>
-        <item>lion</item>
-        <item>rhino</item>
-        <item>tiger</item>
-        <item>turtle</item>
-        <item>zebra</item>
-    </string-array>
-
     <string-array name="feed_image" formatted="false">
         <item>https://i.ytimg.com/vi/SNggmeilXDQ/maxresdefault.jpg</item>
         <item>https://endimages.s3.amazonaws.com/cache/a2/4f/a24f2b9a06bce41725f883ec8af4fa29.jpg</item>

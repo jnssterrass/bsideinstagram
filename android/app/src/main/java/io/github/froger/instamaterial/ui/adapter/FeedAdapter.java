@@ -361,8 +361,6 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
         public void bindView(FeedItem feedItem) {
             this.feedItem = feedItem;
-            int adapterPosition = getAdapterPosition();
-            int tagPos = adapterPosition % tagArray.length;
 
             loadImage(feedItem.URL);
             tvFeedUser.setText(feedItem.username);

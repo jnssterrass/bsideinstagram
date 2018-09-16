@@ -45,4 +45,8 @@ public class Utils {
     public static boolean isAndroid5() {
         return Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP;
     }
+
+    public static int getImageId(Context context, String userPhoto) {
+        return context.getResources().getIdentifier("drawable/" + userPhoto, null, context.getPackageName());
+    }
 }

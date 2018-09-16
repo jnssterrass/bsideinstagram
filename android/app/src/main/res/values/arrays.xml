@@ -8,6 +8,14 @@
         <item>Ishtar</item>
     </string-array>
 
+    <string-array name="feed_userphoto">
+        <item>adult_attractive_beautiful</item>
+        <item>beard_blur_casual</item>
+        <item>adult_beard_boy</item>
+        <item>black_and_white_fun_happy</item>
+        <item>beautiful_brunette_cute</item>
+    </string-array>
+
     <string-array name="feed_text">
         <item>Feed número 1 #lacarab</item>
         <item>Feed número 2 #lacarab</item>

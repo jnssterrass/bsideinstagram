@@ -48,6 +48,7 @@ public class MainActivity extends BaseDrawerActivity implements FeedAdapter.OnFe
     private String[] usernameArray;
     private String[] imageURLArray;
     private String[] textArray;
+    private String[] userPhotoArray;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,7 +59,7 @@ public class MainActivity extends BaseDrawerActivity implements FeedAdapter.OnFe
         if (savedInstanceState == null) {
             pendingIntroAnimation = true;
         } else {
-            feedAdapter.updateItems(imageURLArray, usernameArray, textArray, false);
+            feedAdapter.updateItems(imageURLArray, usernameArray, textArray, userPhotoArray, false);
         }
     }
 
@@ -66,6 +67,7 @@ public class MainActivity extends BaseDrawerActivity implements FeedAdapter.OnFe
         imageURLArray = getResources().getStringArray(R.array.feed_image);
         textArray = getResources().getStringArray(R.array.feed_text);
         usernameArray = getResources().getStringArray(R.array.feed_username);
+        userPhotoArray = getResources().getStringArray(R.array.feed_userphoto);
 
         InstagramDataController.getUrls(this, this);
 
@@ -153,7 +155,7 @@ public class MainActivity extends BaseDrawerActivity implements FeedAdapter.OnFe
                 .setStartDelay(300)
                 .setDuration(ANIM_DURATION_FAB)
                 .start();
-        feedAdapter.updateItems(imageURLArray, textArray, usernameArray, true);
+        feedAdapter.updateItems(imageURLArray, textArray, usernameArray, userPhotoArray, true);
     }
 
     @Override

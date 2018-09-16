@@ -33,6 +33,7 @@ import java.util.Random;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.github.froger.instamaterial.R;
+import io.github.froger.instamaterial.Utils;
 import io.github.froger.instamaterial.controllers.GoogleVisionController;
 import io.github.froger.instamaterial.controllers.VolleyController;
 import io.github.froger.instamaterial.helpers.QwantImageSearchHelper;
@@ -170,18 +171,18 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                             // String description = responses.get(0).getLabelAnnotations().get(0).getDescription();
 
                             /** if (description.contains("rhino"))
-                                description += " murdered without horn";
-                            if (orig_description.contains("tiger"))
-                                description += " murdered";
-                            if (orig_description.contains("elephant"))
-                                description += " killed";
-                            if (orig_description.contains("lion") || description.contains("zebra"))
-                                description += " dead";
-                            if (orig_description.contains("leech"))
-                                description += " cosmetics";
-                            if (orig_description.contains("snail"))
-                                description = "snail cosmetics experiment acid";
-                            **/
+                             description += " murdered without horn";
+                             if (orig_description.contains("tiger"))
+                             description += " murdered";
+                             if (orig_description.contains("elephant"))
+                             description += " killed";
+                             if (orig_description.contains("lion") || description.contains("zebra"))
+                             description += " dead";
+                             if (orig_description.contains("leech"))
+                             description += " cosmetics";
+                             if (orig_description.contains("snail"))
+                             description = "snail cosmetics experiment acid";
+                             **/
 
 
                             Log.e("TAG", description);
@@ -280,16 +281,16 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         return feedItems.size();
     }
 
-    public void updateItems(String[] urls, String[] texts, String[] usernameArray, boolean animated) {
-
+    public void updateItems(String[] urls, String[] texts, String[] usernameArray, String[] userPhotoArray, boolean animated) {
         feedItems.clear();
         for (int i = 0; i < urls.length; ++i) {
             Random r = new Random();
-            int random_likes = r.nextInt(80 - 3) + 3;
+            int randomLikes = r.nextInt(80 - 3) + 3;
             String text = "";
             if (i < texts.length) text = texts[i];
             else text = texts[0];
-            feedItems.add(new FeedItem(urls[i], text, usernameArray[r.nextInt(5)], random_likes, false));
+            int randomNumber = r.nextInt(5);
+            feedItems.add(new FeedItem(urls[i], text, usernameArray[randomNumber], userPhotoArray[randomNumber], randomLikes, false));
         }
         if (animated) {
             notifyItemRangeInserted(0, feedItems.size());
@@ -363,6 +364,7 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             loadImage(feedItem.URL);
             tvFeedUser.setText(feedItem.username);
             tvFeedBottom.setText(feedItem.text);
+            ivUserProfile.setImageResource(Utils.getImageId(view.getContext(), feedItem.userPhoto));
             btnLike.setImageResource(feedItem.isLiked ? R.drawable.ic_heart_red : R.drawable.ic_heart_outline_grey);
             tsLikesCounter.setCurrentText(vImageRoot.getResources().getQuantityString(
                     R.plurals.likes_count, feedItem.likesCount, feedItem.likesCount
@@ -409,13 +411,15 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         public String URL;
         public String text;
         public String username;
+        public String userPhoto;
         public int likesCount;
         public boolean isLiked;
 
-        public FeedItem(String url, String text, String username, int likesCount, boolean isLiked) {
+        public FeedItem(String url, String text, String username, String userPhoto, int likesCount, boolean isLiked) {
             this.URL = url;
             this.text = text;
             this.username = username;
+            this.userPhoto = userPhoto;
             this.likesCount = likesCount;
             this.isLiked = isLiked;
         }

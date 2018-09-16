@@ -1,10 +1,9 @@
 package io.github.froger.instamaterial.ui.adapter;
 
 import android.content.Context;
-import android.graphics.Bitmap;
+import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutCompat;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,9 +13,7 @@ import android.widget.ImageView;
 import android.widget.TextSwitcher;
 import android.widget.TextView;
 
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.ImageRequest;
+import com.google.api.services.vision.v1.model.AnnotateImageResponse;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -25,7 +22,9 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.github.froger.instamaterial.R;
-import io.github.froger.instamaterial.controllers.VolleyController;
+import io.github.froger.instamaterial.controllers.GoogleVisionController;
+import io.github.froger.instamaterial.helpers.QwantImageSearchHelper;
+import io.github.froger.instamaterial.models.QwantImage;
 import io.github.froger.instamaterial.ui.activity.MainActivity;
 import io.github.froger.instamaterial.ui.view.LoadingFeedItemView;
 
@@ -82,7 +81,7 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 onFeedItemClickListener.onMoreClick(v, cellFeedViewHolder.getAdapterPosition());
             }
         });
-        cellFeedViewHolder.ivFeedCenter.setOnClickListener(new View.OnClickListener() {
+        cellFeedViewHolder.viewPager.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 int adapterPosition = cellFeedViewHolder.getAdapterPosition();
@@ -185,9 +184,10 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         private final static String TAG = CellFeedViewHolder.class.getSimpleName();
         private final String[] textArray;
         private final String[] imageArray;
+        private final String[] tagArray;
 
-        @BindView(R.id.ivFeedCenter)
-        ImageView ivFeedCenter;
+        @BindView(R.id.viewPager)
+        ViewPager viewPager;
         @BindView(R.id.tvFeedBottom)
         TextView tvFeedBottom;
         @BindView(R.id.btnComments)
@@ -216,37 +216,62 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             this.view = view;
             textArray = view.getContext().getResources().getStringArray(R.array.feed_text);
             imageArray = view.getContext().getResources().getStringArray(R.array.feed_image);
+            tagArray = view.getContext().getResources().getStringArray(R.array.feed_tag);
             ButterKnife.bind(this, view);
         }
 
         public void bindView(FeedItem feedItem) {
             this.feedItem = feedItem;
             int adapterPosition = getAdapterPosition();
+            int textPos = adapterPosition % textArray.length;
+            int imagePos = adapterPosition % imageArray.length;
+            int tagPos = adapterPosition % tagArray.length;
 
-            final String url = imageArray[adapterPosition % imageArray.length];
+            final ArrayList<String> images = new ArrayList<>();
+            images.add(imageArray[imagePos]);
+            ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(view.getContext(), images);
+            viewPager.setAdapter(viewPagerAdapter);
 
-            // TODO Uncomment when Vision is needed
-            // GoogleVisionController.getInstance(view.getContext()).getLabels(url);
-            
-            ImageRequest request = new ImageRequest(url,
-                    new Response.Listener<Bitmap>() {
-                        @Override
-                        public void onResponse(Bitmap bitmap) {
-                            ivFeedCenter.setImageBitmap(bitmap);
-                        }
-                    }, 0, 0, null,
-                    new Response.ErrorListener() {
-                        public void onErrorResponse(VolleyError error) {
-                            Log.e(TAG, "Error downloading image");
-                        }
-                    });
-            VolleyController.getInstance(view.getContext()).addToQueue(request);
+            // TODO Dont comment this if you want to have slide
+            //addBSide(images);
 
-            tvFeedBottom.setText(textArray[adapterPosition % textArray.length]);
+            tvFeedBottom.setText(textArray[textPos]);
+
+            String hashtags = "#" + tagArray[tagPos] + " #InternationalDayOfAnimals" + " #Bside";
+            tvFeedBottom.setText(textArray[tagPos] + " " + hashtags);
             btnLike.setImageResource(feedItem.isLiked ? R.drawable.ic_heart_red : R.drawable.ic_heart_outline_grey);
             tsLikesCounter.setCurrentText(vImageRoot.getResources().getQuantityString(
                     R.plurals.likes_count, feedItem.likesCount, feedItem.likesCount
             ));
+        }
+
+        private void addBSide(final ArrayList<String> images) {
+            GoogleVisionController.getInstance(view.getContext()).getLabels(images.get(0),
+                    new GoogleVisionController.OnImageResponse() {
+                        @Override
+                        public void onImageResponse(List<AnnotateImageResponse> responses) {
+                            if (!responses.isEmpty() && !responses.get(0).getLabelAnnotations().isEmpty()) {
+                                String description = responses.get(0).getLabelAnnotations().get(0).getDescription();
+                                if (responses.get(0).getLabelAnnotations().size() > 1) {
+                                    description += " " + responses.get(0).getLabelAnnotations().get(1).getDescription();
+                                }
+                                if (responses.get(0).getLabelAnnotations().size() > 2) {
+                                    description += " " + responses.get(0).getLabelAnnotations().get(2).getDescription();
+                                }
+
+                                QwantImageSearchHelper.qwantImageSearchRequest(view.getContext(),
+                                        description, new QwantImageSearchHelper.QwantImageSearchResolvedCallback() {
+                                            @Override
+                                            public void onQwantImageSearchResolved(ArrayList<QwantImage> qwantImages) {
+                                                images.add(qwantImages.get(0).getMedia());
+
+                                                ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(view.getContext(), images);
+                                                viewPager.setAdapter(viewPagerAdapter);
+                                            }
+                                        });
+                            }
+                        }
+                    });
         }
 
         public FeedItem getFeedItem() {
@@ -255,7 +280,6 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     }
 
     public static class LoadingCellFeedViewHolder extends CellFeedViewHolder {
-
         LoadingFeedItemView loadingFeedItemView;
 
         public LoadingCellFeedViewHolder(LoadingFeedItemView view) {

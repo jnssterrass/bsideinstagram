@@ -1,4 +1,4 @@
-package io.github.froger.instamaterial.controllers;
+package io.github.froger.instamaterial.helpers;
 
 import android.content.Context;
 import android.net.Uri;
@@ -15,17 +15,13 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
+import io.github.froger.instamaterial.controllers.VolleyController;
 import io.github.froger.instamaterial.models.QwantImage;
 
-public class QwantImageSearchController {
-    private final String TAG = QwantImageSearchController.class.getSimpleName();
-    private final Context context;
+public class QwantImageSearchHelper {
+    private static final String TAG = QwantImageSearchHelper.class.getSimpleName();
 
-    public QwantImageSearchController(Context context) {
-        this.context = context;
-    }
-
-    public void qwantImageSearchRequest(String queryString, final QwantImageSearchResolvedCallback qwantImageSearchResolvedCallback) {
+    public static void qwantImageSearchRequest(Context context, String queryString, final QwantImageSearchResolvedCallback qwantImageSearchResolvedCallback) {
         Uri.Builder builder = new Uri.Builder();
         builder.scheme("https")
                 .authority("api.qwant.com")
@@ -33,6 +29,7 @@ public class QwantImageSearchController {
                 .appendPath("search")
                 .appendPath("images")
                 .appendQueryParameter("q", queryString)
+                .appendQueryParameter("count", "1")
                 .appendQueryParameter("t", "images")
                 .appendQueryParameter("uiv", "4");
         String url = builder.build().toString();
@@ -60,7 +57,7 @@ public class QwantImageSearchController {
         VolleyController.getInstance(context).addToQueue(jsonObjectRequest);
     }
 
-    private ArrayList<QwantImage> parseQwantImageSearchJSON(JSONObject qwantImageSearchJSONObject) {
+    private static ArrayList<QwantImage> parseQwantImageSearchJSON(JSONObject qwantImageSearchJSONObject) {
         ArrayList<QwantImage> qwantImageSearchArray = new ArrayList<QwantImage>();
 
         try {
@@ -85,6 +82,6 @@ public class QwantImageSearchController {
     }
 
     public interface QwantImageSearchResolvedCallback {
-        void onQwantImageSearchResolved(ArrayList<QwantImage> forecastArray);
+        void onQwantImageSearchResolved(ArrayList<QwantImage> qwantImages);
     }
 }

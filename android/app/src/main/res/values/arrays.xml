@@ -8,14 +8,17 @@
     </string-array>
 
     <string-array name="feed_image" formatted="false">
-        <item>
-            https://ubistatic19-a.akamaihd.net/ubicomstatic/en-us/global/search-thumbnail/uno-ubicom-search-thumbnail_mobile_259517.jpg
-        </item>
-        <item>
-            https://upload.wikimedia.org/wikipedia/commons/thumb/9/94/FreeDOS_Beta_9_pre-release5_%28command_line_interface%29_on_Bochs_sshot20040912.png/440px-FreeDOS_Beta_9_pre-release5_%28command_line_interface%29_on_Bochs_sshot20040912.png
-        </item>
-        <item>https://i.vimeocdn.com/portrait/3754534_300x300</item>
-        <item>https://cdn.appgrid.accedo.tv/content/file/57f3c7409a28fb021e652c81</item>
+        <item>https://blogs.sandiegozoo.org/wp-content/uploads/2015/05/T-1661.jpg</item>
+        <item>https://blogs.sandiegozoo.org/wp-content/uploads/2015/05/T-1661.jpg</item>
+        <item>https://blogs.sandiegozoo.org/wp-content/uploads/2015/05/T-1661.jpg</item>
+        <item>https://blogs.sandiegozoo.org/wp-content/uploads/2015/05/T-1661.jpg</item>
+    </string-array>
+
+    <string-array name="feed_tag">
+        <item>rhino</item>
+        <item>zebra</item>
+        <item>lion</item>
+        <item>cat</item>
     </string-array>
 
 </resources>

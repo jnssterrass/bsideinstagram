@@ -1,7 +1,10 @@
 package io.github.froger.instamaterial.ui.adapter;
 
+import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.os.Handler;
 import android.support.v7.widget.LinearLayoutCompat;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -22,6 +25,7 @@ import com.google.api.services.vision.v1.model.AnnotateImageResponse;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Random;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -50,6 +54,8 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private OnFeedItemClickListener onFeedItemClickListener;
 
     private boolean showLoadingView = false;
+    private ProgressDialog dialog;
+    private Handler handler = new Handler();
 
     public FeedAdapter(Context context) {
         this.context = context;
@@ -112,6 +118,9 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         cellFeedViewHolder.btnBSide.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                dialog = ProgressDialog.show(context, "",
+                        "Extrayendo etiquetas de la imagen", true);
+
                 int adapterPosition = cellFeedViewHolder.getAdapterPosition();
                 String URL = feedItems.get(adapterPosition).URL;
                 String text = feedItems.get(adapterPosition).text;
@@ -137,28 +146,41 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                                 responses.get(0).getLabelAnnotations() != null &&
                                 !responses.get(0).getLabelAnnotations().isEmpty()) {
                             String description = responses.get(0).getLabelAnnotations().get(0).getDescription();
-                                /*
-                                if (responses.get(0).getLabelAnnotations().size() > 1) {
-                                    description += " " + responses.get(0).getLabelAnnotations().get(1).getDescription();
-                                }
-                                if (responses.get(0).getLabelAnnotations().size() > 2) {
-                                    description += " " + responses.get(0).getLabelAnnotations().get(2).getDescription();
-                                }
-                                */
+
                             if (description.contains("rhino"))
                                 description += " murdered without horn";
 
-                            if (description.contains("tiger")) description += " murdered";
-                            if (description.contains("elephant")) description += " killed";
+                            if (description.contains("tiger"))
+                                description += " murdered";
+                            if (description.contains("elephant"))
+                                description += " killed";
                             if (description.contains("lion") || description.contains("zebra"))
                                 description += " dead";
                             if (description.contains("lion") || description.contains("zebra"))
                                 description += " dead";
-                            if (description.contains("leech")) description += " cosmetics";
+                            if (description.contains("leech"))
+                                description += " cosmetics";
                             if (description.contains("snail"))
                                 description = "snail cosmetics experiment acid";
 
                             Log.e("TAG", description);
+
+                            final String finalDescription = description;
+                            ((Activity) context).runOnUiThread(new Runnable() {
+                                public void run() {
+                                    handler.postDelayed(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            if (dialog != null) {
+                                                dialog.cancel();
+                                            }
+
+                                            dialog = ProgressDialog.show(context, "",
+                                                    "Buscando imagen con etiquetas:\n" + finalDescription, true);
+                                        }
+                                    }, 500);
+                                }
+                            });
 
                             if (text.contains("#bside") || text.contains("#lacarab")) {
                                 QwantImageSearchHelper.qwantImageSearchRequest(context,
@@ -166,7 +188,16 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                                             @Override
                                             public void onQwantImageSearchResolved(ArrayList<QwantImage> qwantImages) {
                                                 feedItems.get(adapterPosition).URL = qwantImages.get(0).getMedia();
-                                                notifyItemChanged(adapterPosition);
+
+                                                handler.postDelayed(new Runnable() {
+                                                    @Override
+                                                    public void run() {
+                                                        if (dialog != null) {
+                                                            dialog.cancel();
+                                                        }
+                                                        notifyItemChanged(adapterPosition);
+                                                    }
+                                                }, 2500);
                                             }
                                         });
 
@@ -179,8 +210,8 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                                         new NewsData.OnNewsURLsResolved() {
                                     @Override
                                     public void onNewsURLsResolved(ArrayList<String> urls) {
-                                        //feedItems.get(adapterPosition).URL = qwantImages.get(0).getMedia();
-                                        //notifyItemChanged(adapterPosition);
+                                        feedItems.get(adapterPosition).text = urls.toString();
+                                        notifyItemChanged(adapterPosition);
                                         Log.e("TAG", urls.toString());
                                     }
                                 });
@@ -224,17 +255,17 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         return feedItems.size();
     }
 
-    public void updateItems(String[] urls, String[] texts, boolean animated) {
+    public void updateItems(String[] urls, String[] texts, String[] usernameArray, boolean animated) {
+
         feedItems.clear();
-        feedItems.addAll(Arrays.asList(
-                new FeedItem(urls[0], texts[0], 33, false),
-                new FeedItem(urls[1], texts[1], 11, false),
-                new FeedItem(urls[2], texts[2], 223, false),
-                new FeedItem(urls[3], texts[3], 2, false)
-                //new FeedItem(urls[0], 6, false),
-                //new FeedItem(urls[0], 8, false),
-                //new FeedItem(urls[0], 99, false)
-        ));
+        for (int i = 0; i < urls.length; ++i) {
+            Random r = new Random();
+            int random_likes = r.nextInt(80 - 3) + 3;
+            String text = "";
+            if (i < texts.length) text = texts[i];
+            else text = texts[0];
+            feedItems.add(new FeedItem(urls[i],text,usernameArray[r.nextInt(5)],random_likes, false));
+        }
         if (animated) {
             notifyItemRangeInserted(0, feedItems.size());
         } else {
@@ -263,6 +294,8 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         private final static String TAG = CellFeedViewHolder.class.getSimpleName();
         private final String[] tagArray;
 
+        @BindView(R.id.tvFeedUser)
+        TextView tvFeedUser;
         @BindView(R.id.ivFeedCenter)
         ImageView ivFeedCenter;
         @BindView(R.id.tvFeedBottom)
@@ -303,6 +336,7 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             int tagPos = adapterPosition % tagArray.length;
 
             loadImage(feedItem.URL);
+            tvFeedUser.setText(feedItem.username);
             tvFeedBottom.setText(feedItem.text);
             btnLike.setImageResource(feedItem.isLiked ? R.drawable.ic_heart_red : R.drawable.ic_heart_outline_grey);
             tsLikesCounter.setCurrentText(vImageRoot.getResources().getQuantityString(
@@ -315,7 +349,6 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     new Response.Listener<Bitmap>() {
                         @Override
                         public void onResponse(Bitmap bitmap) {
-                            //ivFeedCenter.setImageBitmap(bitmap);
                             ivFeedCenter.setImageBitmap(bitmap);
                         }
                     }, 0, 0, null,
@@ -350,12 +383,14 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     public static class FeedItem {
         public String URL;
         public String text;
+        public String username;
         public int likesCount;
         public boolean isLiked;
 
-        public FeedItem(String url, String text, int likesCount, boolean isLiked) {
+        public FeedItem(String url, String text, String username, int likesCount, boolean isLiked) {
             this.URL = url;
             this.text = text;
+            this.username = username;
             this.likesCount = likesCount;
             this.isLiked = isLiked;
         }

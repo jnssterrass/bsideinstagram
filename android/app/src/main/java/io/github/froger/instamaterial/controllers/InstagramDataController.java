@@ -20,7 +20,9 @@ import java.util.ArrayList;
 
 public class InstagramDataController {
     private static final String TAG = InstagramDataController.class.getSimpleName();
-    private static final String API_TOKEN = "288757825.37f6a41.467aaa07edf34eed802f6f8a5ca46ede";
+    //private static final String JUAN_API_TOKEN = "288757825.37f6a41.467aaa07edf34eed802f6f8a5ca46ede";
+    private static final String API_TOKEN = "8590231715.8df6139.4299bc50b0204148af186b022052d7bc";
+
     private static final String BASE_URL = "https://api.instagram.com/v1/users/self/media/recent/?access_token=";
 
     public static void getUrls(Context context, final OnInstagramURLsResolved onInstagramURLsResolved) {

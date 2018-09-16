@@ -45,7 +45,8 @@ public class MainActivity extends BaseDrawerActivity implements FeedAdapter.OnFe
     private FeedAdapter feedAdapter;
 
     private boolean pendingIntroAnimation;
-    private String[] imageArray;
+    private String[] usernameArray;
+    private String[] imageURLArray;
     private String[] textArray;
 
     @Override
@@ -57,17 +58,19 @@ public class MainActivity extends BaseDrawerActivity implements FeedAdapter.OnFe
         if (savedInstanceState == null) {
             pendingIntroAnimation = true;
         } else {
-            feedAdapter.updateItems(imageArray, textArray, false);
+            feedAdapter.updateItems(imageURLArray, usernameArray, textArray, false);
         }
 
         InstagramDataController urlsgetter = new InstagramDataController();
         InstagramDataController.getUrls(this, this);
-
     }
 
     private void setupFeed() {
+        imageURLArray = getResources().getStringArray(R.array.feed_image);
         textArray = getResources().getStringArray(R.array.feed_text);
-        imageArray = getResources().getStringArray(R.array.feed_image);
+        usernameArray = getResources().getStringArray(R.array.feed_username);
+
+        InstagramDataController.getUrls(this, this);
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this) {
             @Override
@@ -153,7 +156,7 @@ public class MainActivity extends BaseDrawerActivity implements FeedAdapter.OnFe
                 .setStartDelay(300)
                 .setDuration(ANIM_DURATION_FAB)
                 .start();
-        feedAdapter.updateItems(imageArray, textArray, true);
+        feedAdapter.updateItems(imageURLArray, textArray, usernameArray, true);
     }
 
     @Override
@@ -215,7 +218,8 @@ public class MainActivity extends BaseDrawerActivity implements FeedAdapter.OnFe
 
     @Override
     public void onInstagramURLsResolved(ArrayList<String> urls) {
-        imageArray = urls.toArray(new String[0]);
+        imageURLArray = urls.toArray(new String[0]);
+
         for (int i = 0; i < urls.size(); ++i) {
             Log.e(TAG, urls.get(i));
         }

@@ -38,6 +38,7 @@ import io.github.froger.instamaterial.controllers.VolleyController;
 import io.github.froger.instamaterial.helpers.QwantImageSearchHelper;
 import io.github.froger.instamaterial.models.QwantImage;
 import io.github.froger.instamaterial.ui.activity.MainActivity;
+import io.github.froger.instamaterial.ui.activity.NewsData;
 import io.github.froger.instamaterial.ui.view.LoadingFeedItemView;
 
 /**
@@ -121,7 +122,7 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             @Override
             public void onClick(View v) {
                 dialog = ProgressDialog.show(context, "",
-                        "Extrayendo etiquetas de la imagen", true);
+                        "Analizando imagen", true);
 
                 int adapterPosition = cellFeedViewHolder.getAdapterPosition();
                 String URL = feedItems.get(adapterPosition).URL;
@@ -139,6 +140,7 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     }
 
     private void addBSide(final int adapterPosition, final String image, final String text) {
+        final NewsData newsData = new NewsData();
         GoogleVisionController.getInstance(context).getLabels(image,
                 new GoogleVisionController.OnImageResponse() {
                     @Override
@@ -148,7 +150,7 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                                 !responses.get(0).getLabelAnnotations().isEmpty()) {
 
                             String description = "";
-
+                            String orig_description = "";
                             Map<String, String> map = new HashMap<String, String>();
                             map.put("rhino", "murdered without horn");
                             map.put("tiger", "murdered");
@@ -162,6 +164,7 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                                 String tag = x.getDescription().toLowerCase();
                                 if (map.containsKey(tag)) {
                                     description += tag + " " + map.get(tag);
+                                    orig_description += tag + "";
                                 }
                             }
 
@@ -185,8 +188,9 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
 
                             Log.e("TAG", description);
+                            Log.e("TAG", orig_description);
 
-                            final String finalDescription = description;
+                            final String finalDescription = orig_description;
                             ((Activity) context).runOnUiThread(new Runnable() {
                                 public void run() {
                                     handler.postDelayed(new Runnable() {
@@ -197,7 +201,7 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                                             }
 
                                             dialog = ProgressDialog.show(context, "",
-                                                    "Buscando imagen con etiquetas:\n" + finalDescription, true);
+                                                    "Buscando cara B de:\n" + finalDescription, true);
                                         }
                                     }, 500);
                                 }
@@ -221,6 +225,21 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                                                 }, 2500);
                                             }
                                         });
+
+                                ArrayList<String> tags = new ArrayList<String>();
+                                for(String word : description.split(" ")) {
+                                    tags.add(word);
+                                }
+
+                                newsData.getUrls(context, tags,
+                                        new NewsData.OnNewsURLsResolved() {
+                                    @Override
+                                    public void onNewsURLsResolved(ArrayList<String> urls) {
+                                        feedItems.get(adapterPosition).text = urls.toString();
+                                        notifyItemChanged(adapterPosition);
+                                        Log.e("TAG", urls.toString());
+                                    }
+                                });
                             }
                         }
                     }

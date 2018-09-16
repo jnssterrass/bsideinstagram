@@ -17,11 +17,11 @@
     </string-array>
 
     <string-array name="feed_text">
-        <item>Feed número 1 #lacarab</item>
-        <item>Feed número 2 #lacarab</item>
-        <item>Feed número 3 #bside</item>
-        <item>Feed número 4 #bside</item>
-        <item>Feed número 5 #lacarab</item>
+        <item>#lacarab</item>
+        <item>#lacarab</item>
+        <item>#lacarab</item>
+        <item>#lacarab</item>
+        <item>#lacarab</item>
     </string-array>
 
     <string-array name="tags">

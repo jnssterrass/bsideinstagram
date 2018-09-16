@@ -235,8 +235,6 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
             // TODO Dont comment this if you want to have slide
             String text = textArray[tagPos];
-            Log.e("TAG", text + " --- #bside=" + text.contains("#bside"));
-            Log.e("TAG", text + " --- #lacarab=" + text.contains("#lacarab"));
             addBSide(images, text);
 
             tvFeedBottom.setText(text);
@@ -253,12 +251,23 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                         public void onImageResponse(List<AnnotateImageResponse> responses) {
                             if (!responses.isEmpty() && !responses.get(0).getLabelAnnotations().isEmpty()) {
                                 String description = responses.get(0).getLabelAnnotations().get(0).getDescription();
+                                /*
                                 if (responses.get(0).getLabelAnnotations().size() > 1) {
                                     description += " " + responses.get(0).getLabelAnnotations().get(1).getDescription();
                                 }
                                 if (responses.get(0).getLabelAnnotations().size() > 2) {
                                     description += " " + responses.get(0).getLabelAnnotations().get(2).getDescription();
                                 }
+                                */
+                                if (description.contains("rhino")) description = "rhino";
+
+                                if (description.contains("tiger")) description += " murdered";
+                                if (description.contains("elephant")) description += " killed";
+                                if (description.contains("rhino") || description.contains("lion") || description.contains("zebra"))
+                                    description += " dead";
+
+
+                                Log.e("TAG", description);
 
                                 if (text.contains("#bside") || text.contains("#lacarab")) {
                                     QwantImageSearchHelper.qwantImageSearchRequest(view.getContext(),

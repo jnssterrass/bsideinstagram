@@ -83,6 +83,27 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 onFeedItemClickListener.onMoreClick(v, cellFeedViewHolder.getAdapterPosition());
             }
         });
+        // Not used because when liked, all re-draws and re-download
+        /*cellFeedViewHolder.viewPager.setOnTouchListener(new View.OnTouchListener() {
+                    private boolean moved;
+                    @Override
+                    public boolean onTouch(View view, MotionEvent motionEvent) {
+                        if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
+                            moved = false;
+                        }
+                        if (motionEvent.getAction() == MotionEvent.ACTION_MOVE) {
+                            moved = true;
+                        }
+                        if (motionEvent.getAction() == MotionEvent.ACTION_UP) {
+                            if (!moved) {
+                                view.performClick();
+                            }
+                        }
+
+                        return false;
+                    }
+                }
+        );*/
         cellFeedViewHolder.viewPager.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -255,7 +276,9 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     new GoogleVisionController.OnImageResponse() {
                         @Override
                         public void onImageResponse(List<AnnotateImageResponse> responses) {
-                            if (responses != null && !responses.isEmpty() && !responses.get(0).getLabelAnnotations().isEmpty()) {
+                            if (responses != null && !responses.isEmpty() &&
+                                    responses.get(0).getLabelAnnotations() != null &&
+                                    !responses.get(0).getLabelAnnotations().isEmpty()) {
                                 String description = responses.get(0).getLabelAnnotations().get(0).getDescription();
                                 if (responses.get(0).getLabelAnnotations().size() > 1) {
                                     description += " " + responses.get(0).getLabelAnnotations().get(1).getDescription();

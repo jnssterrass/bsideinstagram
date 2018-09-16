@@ -59,14 +59,13 @@ public class MainActivity extends BaseDrawerActivity implements FeedAdapter.OnFe
         } else {
             feedAdapter.updateItems(imageArray, textArray, false);
         }
-
-        InstagramDataController urlsgetter = new InstagramDataController();
-        InstagramDataController.getUrls(this, this);
     }
 
     private void setupFeed() {
         textArray = getResources().getStringArray(R.array.feed_text);
         imageArray = getResources().getStringArray(R.array.feed_image);
+
+        InstagramDataController.getUrls(this, this);
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this) {
             @Override
@@ -215,6 +214,7 @@ public class MainActivity extends BaseDrawerActivity implements FeedAdapter.OnFe
     @Override
     public void onInstagramURLsResolved(ArrayList<String> urls) {
         imageArray = urls.toArray(new String[0]);
+
         for (int i = 0; i < urls.size(); ++i) {
             Log.e(TAG, urls.get(i));
         }

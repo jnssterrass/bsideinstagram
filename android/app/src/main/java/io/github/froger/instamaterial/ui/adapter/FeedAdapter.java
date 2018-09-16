@@ -21,10 +21,13 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageRequest;
 import com.google.api.services.vision.v1.model.AnnotateImageResponse;
+import com.google.api.services.vision.v1.model.EntityAnnotation;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 import butterknife.BindView;
@@ -143,11 +146,29 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                         if (responses != null && !responses.isEmpty() &&
                                 responses.get(0).getLabelAnnotations() != null &&
                                 !responses.get(0).getLabelAnnotations().isEmpty()) {
-                            String description = responses.get(0).getLabelAnnotations().get(0).getDescription();
 
-                            if (description.contains("rhino"))
+                            String description = "";
+
+                            Map<String, String> map = new HashMap<String, String>();
+                            map.put("rhino", "murdered without horn");
+                            map.put("tiger", "murdered");
+                            map.put("elephant", "killed");
+                            map.put("lion", "dead");
+                            map.put("zebra", "dead");
+                            map.put("leech", "cosmetics");
+                            map.put("snail", "cosmetics experiment acid");
+
+                            for (EntityAnnotation x : responses.get(0).getLabelAnnotations()) {
+                                String tag = x.getDescription().toLowerCase();
+                                if (map.containsKey(tag)) {
+                                    description += tag + " " + map.get(tag);
+                                }
+                            }
+
+                            // String description = responses.get(0).getLabelAnnotations().get(0).getDescription();
+
+                            /** if (description.contains("rhino"))
                                 description += " murdered without horn";
-
                             if (description.contains("tiger"))
                                 description += " murdered";
                             if (description.contains("elephant"))
@@ -160,6 +181,8 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                                 description += " cosmetics";
                             if (description.contains("snail"))
                                 description = "snail cosmetics experiment acid";
+                            **/
+
 
                             Log.e("TAG", description);
 

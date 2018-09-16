@@ -23,7 +23,6 @@ import com.android.volley.toolbox.ImageRequest;
 import com.google.api.services.vision.v1.model.AnnotateImageResponse;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
@@ -118,7 +117,7 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             @Override
             public void onClick(View v) {
                 dialog = ProgressDialog.show(context, "",
-                        "Extrayendo etiquetas de la imagen", true);
+                        "Analizando imagen", true);
 
                 int adapterPosition = cellFeedViewHolder.getAdapterPosition();
                 String URL = feedItems.get(adapterPosition).URL;
@@ -143,27 +142,26 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                         if (responses != null && !responses.isEmpty() &&
                                 responses.get(0).getLabelAnnotations() != null &&
                                 !responses.get(0).getLabelAnnotations().isEmpty()) {
-                            String description = responses.get(0).getLabelAnnotations().get(0).getDescription();
+                            String orig_description = responses.get(0).getLabelAnnotations().get(0).getDescription();
+                            String description = orig_description;
 
-                            if (description.contains("rhino"))
+                            if (orig_description.contains("rhino"))
                                 description += " murdered without horn";
-
-                            if (description.contains("tiger"))
+                            if (orig_description.contains("tiger"))
                                 description += " murdered";
-                            if (description.contains("elephant"))
+                            if (orig_description.contains("elephant"))
                                 description += " killed";
-                            if (description.contains("lion") || description.contains("zebra"))
+                            if (orig_description.contains("lion") || description.contains("zebra"))
                                 description += " dead";
-                            if (description.contains("lion") || description.contains("zebra"))
-                                description += " dead";
-                            if (description.contains("leech"))
+                            if (orig_description.contains("leech"))
                                 description += " cosmetics";
-                            if (description.contains("snail"))
+                            if (orig_description.contains("snail"))
                                 description = "snail cosmetics experiment acid";
 
                             Log.e("TAG", description);
+                            Log.e("TAG", orig_description);
 
-                            final String finalDescription = description;
+                            final String finalDescription = orig_description;
                             ((Activity) context).runOnUiThread(new Runnable() {
                                 public void run() {
                                     handler.postDelayed(new Runnable() {
@@ -174,7 +172,7 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                                             }
 
                                             dialog = ProgressDialog.show(context, "",
-                                                    "Buscando imagen con etiquetas:\n" + finalDescription, true);
+                                                    "Buscando cara B de:\n" + finalDescription, true);
                                         }
                                     }, 500);
                                 }

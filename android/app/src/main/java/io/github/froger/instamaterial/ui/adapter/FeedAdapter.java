@@ -22,6 +22,7 @@ import com.google.api.services.vision.v1.model.AnnotateImageResponse;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Random;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -207,16 +208,16 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         return feedItems.size();
     }
 
-    public void updateItems(String[] urls, String[] texts, boolean animated) {
+    public void updateItems(String[] urls, String[] texts, String[] usernameArray, boolean animated) {
+        Random r = new Random();
+
         feedItems.clear();
         feedItems.addAll(Arrays.asList(
-                new FeedItem(urls[0], texts[0], 33, false),
-                new FeedItem(urls[1], texts[1], 11, false),
-                new FeedItem(urls[2], texts[2], 223, false),
-                new FeedItem(urls[3], texts[3], 2, false)
-                //new FeedItem(urls[0], 6, false),
-                //new FeedItem(urls[0], 8, false),
-                //new FeedItem(urls[0], 99, false)
+                new FeedItem(urls[0], texts[0], usernameArray[r.nextInt(5)], 33, false),
+                new FeedItem(urls[1], texts[1], usernameArray[r.nextInt(5)], 11, false),
+                new FeedItem(urls[2], texts[2], usernameArray[r.nextInt(5)], 223, false),
+                new FeedItem(urls[3], texts[3], usernameArray[r.nextInt(5)], 2, false),
+                new FeedItem(urls[4], texts[4], usernameArray[r.nextInt(5)], 6, false)
         ));
         if (animated) {
             notifyItemRangeInserted(0, feedItems.size());
@@ -246,6 +247,8 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         private final static String TAG = CellFeedViewHolder.class.getSimpleName();
         private final String[] tagArray;
 
+        @BindView(R.id.tvFeedUser)
+        TextView tvFeedUser;
         @BindView(R.id.ivFeedCenter)
         ImageView ivFeedCenter;
         @BindView(R.id.tvFeedBottom)
@@ -286,6 +289,7 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             int tagPos = adapterPosition % tagArray.length;
 
             loadImage(feedItem.URL);
+            tvFeedUser.setText(feedItem.username);
             tvFeedBottom.setText(feedItem.text);
             btnLike.setImageResource(feedItem.isLiked ? R.drawable.ic_heart_red : R.drawable.ic_heart_outline_grey);
             tsLikesCounter.setCurrentText(vImageRoot.getResources().getQuantityString(
@@ -298,7 +302,6 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     new Response.Listener<Bitmap>() {
                         @Override
                         public void onResponse(Bitmap bitmap) {
-                            //ivFeedCenter.setImageBitmap(bitmap);
                             ivFeedCenter.setImageBitmap(bitmap);
                         }
                     }, 0, 0, null,
@@ -333,12 +336,14 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     public static class FeedItem {
         public String URL;
         public String text;
+        public String username;
         public int likesCount;
         public boolean isLiked;
 
-        public FeedItem(String url, String text, int likesCount, boolean isLiked) {
+        public FeedItem(String url, String text, String username, int likesCount, boolean isLiked) {
             this.URL = url;
             this.text = text;
+            this.username = username;
             this.likesCount = likesCount;
             this.isLiked = isLiked;
         }

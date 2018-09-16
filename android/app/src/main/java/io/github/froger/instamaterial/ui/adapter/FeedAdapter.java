@@ -22,6 +22,7 @@ import com.google.api.services.vision.v1.model.AnnotateImageResponse;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Random;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -209,15 +210,23 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     public void updateItems(String[] urls, String[] texts, boolean animated) {
         feedItems.clear();
-        feedItems.addAll(Arrays.asList(
-                new FeedItem(urls[0], texts[0], 33, false),
-                new FeedItem(urls[1], texts[1], 11, false),
-                new FeedItem(urls[2], texts[2], 223, false),
-                new FeedItem(urls[3], texts[3], 2, false)
-                //new FeedItem(urls[0], 6, false),
-                //new FeedItem(urls[0], 8, false),
-                //new FeedItem(urls[0], 99, false)
-        ));
+        for (int i = 0; i < urls.length; ++i) {
+            Random r = new Random();
+            int random_likes = r.nextInt(80 - 3) + 3;
+            String text = "";
+            if (i < texts.length) text = texts[i];
+            else text = texts[0];
+            feedItems.add(new FeedItem(urls[i],text,random_likes, false));
+        }
+//        feedItems.addAll(Arrays.asList(
+//                new FeedItem(urls[0], texts[0], 33, false),
+//                new FeedItem(urls[1], texts[1], 11, false),
+//                new FeedItem(urls[2], texts[2], 223, false),
+//                new FeedItem(urls[3], texts[3], 2, false)
+//                //new FeedItem(urls[0], 6, false),
+//                //new FeedItem(urls[0], 8, false),
+//                //new FeedItem(urls[0], 99, false)
+//        ));
         if (animated) {
             notifyItemRangeInserted(0, feedItems.size());
         } else {

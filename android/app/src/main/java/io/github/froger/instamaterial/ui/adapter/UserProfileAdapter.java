@@ -22,7 +22,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.github.froger.instamaterial.R;
 import io.github.froger.instamaterial.Utils;
-import io.github.froger.instamaterial.ui.activity.InstagramData;
 
 /**
  * Created by Miroslaw Stanek on 20.01.15.
@@ -41,17 +40,14 @@ public class UserProfileAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     private boolean lockedAnimations = false;
     private int lastAnimatedItem = -1;
 
-    public void setPhotos(ArrayList<String> photos) {
-        this.photos = photos;
-    }
-
     public UserProfileAdapter(Context context) {
         this.context = context;
         this.cellSize = Utils.getScreenWidth(context) / 3;
-        InstagramData urlsgetter = new InstagramData();
-        urlsgetter.setAdapter(this);
-        urlsgetter.getUrls(context);
-        //this.photos = Arrays.asList(context.getResources().getStringArray(R.array.user_photos));
+        this.photos = Arrays.asList(context.getResources().getStringArray(R.array.user_photos));
+    }
+
+    public void setPhotos(ArrayList<String> photos) {
+        this.photos = photos;
     }
 
     @Override

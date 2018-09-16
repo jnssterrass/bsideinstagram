@@ -8,6 +8,9 @@ public class QwantImage {
     }
 
     public void setMedia(String media) {
+        if (!media.contains("https")) {
+            media = media.replace("http", "https");
+        }
         this.media = media;
     }
 }

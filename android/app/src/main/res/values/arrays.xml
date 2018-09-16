@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="feed_text">
-        <item>Feed número 1</item>
-        <item>Feed número 2</item>
-        <item>Feed número 3</item>
-        <item>Feed número 4</item>
+        <item>Feed número 1 #lacarab</item>
+        <item>Feed número 1 #lacarab</item>
+        <item>Feed número 2 #bside</item>
+        <item>Feed número 3 #bside</item>
+        <item>Feed número 4 #lacarab</item>
     </string-array>
 
     <string-array name="tags">
@@ -18,17 +19,19 @@
     </string-array>
 
     <string-array name="feed_image" formatted="false">
-        <item>https://blogs.sandiegozoo.org/wp-content/uploads/2015/05/T-1661.jpg</item>
-        <item>https://blogs.sandiegozoo.org/wp-content/uploads/2015/05/T-1661.jpg</item>
-        <item>https://blogs.sandiegozoo.org/wp-content/uploads/2015/05/T-1661.jpg</item>
-        <item>https://blogs.sandiegozoo.org/wp-content/uploads/2015/05/T-1661.jpg</item>
+        <item>https://i.ytimg.com/vi/SNggmeilXDQ/maxresdefault.jpg</item>
+        <item>https://endimages.s3.amazonaws.com/cache/a2/4f/a24f2b9a06bce41725f883ec8af4fa29.jpg</item>
+        <item>https://i.ytimg.com/vi/sgMnEDmx2sg/maxresdefault.jpg</item>
+        <item>https://media.mnn.com/assets/images/2017/11/BlackRhinoTarongaWesternPlainsZoo.jpg</item>
+        <item>http://cdn.images.express.co.uk/img/dynamic/1/590x/secondary/Circus-lion-506252.jpg</item>
     </string-array>
 
     <string-array name="feed_tag">
-        <item>rhino</item>
-        <item>zebra</item>
-        <item>lion</item>
-        <item>cat</item>
+        <item>Elephant</item>
+        <item>Tiger</item>
+        <item>Snail</item>
+        <item>Rhino</item>
+        <item>Lion</item>
     </string-array>
 
 </resources>

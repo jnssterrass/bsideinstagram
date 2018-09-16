@@ -1,9 +1,10 @@
 package io.github.froger.instamaterial.ui.adapter;
 
 import android.content.Context;
-import android.support.v4.view.ViewPager;
+import android.graphics.Bitmap;
 import android.support.v7.widget.LinearLayoutCompat;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +14,9 @@ import android.widget.ImageView;
 import android.widget.TextSwitcher;
 import android.widget.TextView;
 
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.ImageRequest;
 import com.google.api.services.vision.v1.model.AnnotateImageResponse;
 
 import java.util.ArrayList;
@@ -23,6 +27,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.github.froger.instamaterial.R;
 import io.github.froger.instamaterial.controllers.GoogleVisionController;
+import io.github.froger.instamaterial.controllers.VolleyController;
 import io.github.froger.instamaterial.helpers.QwantImageSearchHelper;
 import io.github.froger.instamaterial.models.QwantImage;
 import io.github.froger.instamaterial.ui.activity.MainActivity;
@@ -81,7 +86,7 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 onFeedItemClickListener.onMoreClick(v, cellFeedViewHolder.getAdapterPosition());
             }
         });
-        cellFeedViewHolder.viewPager.setOnClickListener(new View.OnClickListener() {
+        cellFeedViewHolder.ivFeedCenter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 int adapterPosition = cellFeedViewHolder.getAdapterPosition();
@@ -103,12 +108,69 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 }
             }
         });
+        cellFeedViewHolder.btnBSide.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int adapterPosition = cellFeedViewHolder.getAdapterPosition();
+                String URL = feedItems.get(adapterPosition).URL;
+                String text = feedItems.get(adapterPosition).text;
+
+                addBSide(adapterPosition, URL, text);
+            }
+        });
         cellFeedViewHolder.ivUserProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 onFeedItemClickListener.onProfileClick(view);
             }
         });
+    }
+
+    private void addBSide(final int adapterPosition, final String image, final String text) {
+        GoogleVisionController.getInstance(context).getLabels(image,
+                new GoogleVisionController.OnImageResponse() {
+                    @Override
+                    public void onImageResponse(List<AnnotateImageResponse> responses) {
+                        if (responses != null && !responses.isEmpty() &&
+                                responses.get(0).getLabelAnnotations() != null &&
+                                !responses.get(0).getLabelAnnotations().isEmpty()) {
+                            String description = responses.get(0).getLabelAnnotations().get(0).getDescription();
+                                /*
+                                if (responses.get(0).getLabelAnnotations().size() > 1) {
+                                    description += " " + responses.get(0).getLabelAnnotations().get(1).getDescription();
+                                }
+                                if (responses.get(0).getLabelAnnotations().size() > 2) {
+                                    description += " " + responses.get(0).getLabelAnnotations().get(2).getDescription();
+                                }
+                                */
+                            if (description.contains("rhino"))
+                                description += " murdered without horn";
+
+                            if (description.contains("tiger")) description += " murdered";
+                            if (description.contains("elephant")) description += " killed";
+                            if (description.contains("lion") || description.contains("zebra"))
+                                description += " dead";
+                            if (description.contains("lion") || description.contains("zebra"))
+                                description += " dead";
+                            if (description.contains("leech")) description += " cosmetics";
+                            if (description.contains("snail"))
+                                description = "snail cosmetics experiment acid";
+
+                            Log.e("TAG", description);
+
+                            if (text.contains("#bside") || text.contains("#lacarab")) {
+                                QwantImageSearchHelper.qwantImageSearchRequest(context,
+                                        description, new QwantImageSearchHelper.QwantImageSearchResolvedCallback() {
+                                            @Override
+                                            public void onQwantImageSearchResolved(ArrayList<QwantImage> qwantImages) {
+                                                feedItems.get(adapterPosition).URL = qwantImages.get(0).getMedia();
+                                                notifyItemChanged(adapterPosition);
+                                            }
+                                        });
+                            }
+                        }
+                    }
+                });
     }
 
     @Override
@@ -145,16 +207,16 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         return feedItems.size();
     }
 
-    public void updateItems(boolean animated) {
+    public void updateItems(String[] urls, String[] texts, boolean animated) {
         feedItems.clear();
         feedItems.addAll(Arrays.asList(
-                new FeedItem(33, false),
-                new FeedItem(1, false),
-                new FeedItem(223, false),
-                new FeedItem(2, false),
-                new FeedItem(6, false),
-                new FeedItem(8, false),
-                new FeedItem(99, false)
+                new FeedItem(urls[0], texts[0], 33, false),
+                new FeedItem(urls[1], texts[1], 11, false),
+                new FeedItem(urls[2], texts[2], 223, false),
+                new FeedItem(urls[3], texts[3], 2, false)
+                //new FeedItem(urls[0], 6, false),
+                //new FeedItem(urls[0], 8, false),
+                //new FeedItem(urls[0], 99, false)
         ));
         if (animated) {
             notifyItemRangeInserted(0, feedItems.size());
@@ -182,12 +244,10 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     public static class CellFeedViewHolder extends RecyclerView.ViewHolder {
         private final static String TAG = CellFeedViewHolder.class.getSimpleName();
-        private final String[] textArray;
-        private final String[] imageArray;
         private final String[] tagArray;
 
-        @BindView(R.id.viewPager)
-        ViewPager viewPager;
+        @BindView(R.id.ivFeedCenter)
+        ImageView ivFeedCenter;
         @BindView(R.id.tvFeedBottom)
         TextView tvFeedBottom;
         @BindView(R.id.btnComments)
@@ -196,6 +256,8 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         ImageButton btnLike;
         @BindView(R.id.btnMore)
         ImageButton btnMore;
+        @BindView(R.id.btnBSide)
+        ImageButton btnBSide;
         @BindView(R.id.vBgLike)
         View vBgLike;
         @BindView(R.id.ivLike)
@@ -212,10 +274,8 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
         public CellFeedViewHolder(View view) {
             super(view);
-
             this.view = view;
-            textArray = view.getContext().getResources().getStringArray(R.array.feed_text);
-            imageArray = view.getContext().getResources().getStringArray(R.array.feed_image);
+
             tagArray = view.getContext().getResources().getStringArray(R.array.feed_tag);
             ButterKnife.bind(this, view);
         }
@@ -223,55 +283,32 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         public void bindView(FeedItem feedItem) {
             this.feedItem = feedItem;
             int adapterPosition = getAdapterPosition();
-            int textPos = adapterPosition % textArray.length;
-            int imagePos = adapterPosition % imageArray.length;
             int tagPos = adapterPosition % tagArray.length;
 
-            final ArrayList<String> images = new ArrayList<>();
-            images.add(imageArray[imagePos]);
-            ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(view.getContext(), images);
-            viewPager.setAdapter(viewPagerAdapter);
-
-            // TODO Dont comment this if you want to have slide
-            //addBSide(images);
-
-            tvFeedBottom.setText(textArray[textPos]);
-
-            String hashtags = "#" + tagArray[tagPos] + " #InternationalDayOfAnimals" + " #Bside";
-            tvFeedBottom.setText(textArray[tagPos] + " " + hashtags);
+            loadImage(feedItem.URL);
+            tvFeedBottom.setText(feedItem.text);
             btnLike.setImageResource(feedItem.isLiked ? R.drawable.ic_heart_red : R.drawable.ic_heart_outline_grey);
             tsLikesCounter.setCurrentText(vImageRoot.getResources().getQuantityString(
                     R.plurals.likes_count, feedItem.likesCount, feedItem.likesCount
             ));
         }
 
-        private void addBSide(final ArrayList<String> images) {
-            GoogleVisionController.getInstance(view.getContext()).getLabels(images.get(0),
-                    new GoogleVisionController.OnImageResponse() {
+        private void loadImage(String url) {
+            ImageRequest request = new ImageRequest(url,
+                    new Response.Listener<Bitmap>() {
                         @Override
-                        public void onImageResponse(List<AnnotateImageResponse> responses) {
-                            if (!responses.isEmpty() && !responses.get(0).getLabelAnnotations().isEmpty()) {
-                                String description = responses.get(0).getLabelAnnotations().get(0).getDescription();
-                                if (responses.get(0).getLabelAnnotations().size() > 1) {
-                                    description += " " + responses.get(0).getLabelAnnotations().get(1).getDescription();
-                                }
-                                if (responses.get(0).getLabelAnnotations().size() > 2) {
-                                    description += " " + responses.get(0).getLabelAnnotations().get(2).getDescription();
-                                }
-
-                                QwantImageSearchHelper.qwantImageSearchRequest(view.getContext(),
-                                        description, new QwantImageSearchHelper.QwantImageSearchResolvedCallback() {
-                                            @Override
-                                            public void onQwantImageSearchResolved(ArrayList<QwantImage> qwantImages) {
-                                                images.add(qwantImages.get(0).getMedia());
-
-                                                ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(view.getContext(), images);
-                                                viewPager.setAdapter(viewPagerAdapter);
-                                            }
-                                        });
-                            }
+                        public void onResponse(Bitmap bitmap) {
+                            //ivFeedCenter.setImageBitmap(bitmap);
+                            ivFeedCenter.setImageBitmap(bitmap);
+                        }
+                    }, 0, 0, null,
+                    new Response.ErrorListener() {
+                        public void onErrorResponse(VolleyError error) {
+                            Log.e("TAG", "Error downloading image");
+                            Log.e("TAG", "" + error.toString());
                         }
                     });
+            VolleyController.getInstance(view.getContext()).addToQueue(request);
         }
 
         public FeedItem getFeedItem() {
@@ -294,10 +331,14 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     }
 
     public static class FeedItem {
+        public String URL;
+        public String text;
         public int likesCount;
         public boolean isLiked;
 
-        public FeedItem(int likesCount, boolean isLiked) {
+        public FeedItem(String url, String text, int likesCount, boolean isLiked) {
+            this.URL = url;
+            this.text = text;
             this.likesCount = likesCount;
             this.isLiked = isLiked;
         }

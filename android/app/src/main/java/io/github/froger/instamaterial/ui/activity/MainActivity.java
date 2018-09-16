@@ -44,6 +44,8 @@ public class MainActivity extends BaseDrawerActivity implements FeedAdapter.OnFe
     private FeedAdapter feedAdapter;
 
     private boolean pendingIntroAnimation;
+    private String[] imageArray;
+    private String[] textArray;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,15 +56,17 @@ public class MainActivity extends BaseDrawerActivity implements FeedAdapter.OnFe
         if (savedInstanceState == null) {
             pendingIntroAnimation = true;
         } else {
-            feedAdapter.updateItems(false);
+            feedAdapter.updateItems(imageArray, textArray, false);
         }
-
 
         InstagramData urlsgetter = new InstagramData();
         InstagramData.getUrls(this, this);
     }
 
     private void setupFeed() {
+        textArray = getResources().getStringArray(R.array.feed_text);
+        imageArray = getResources().getStringArray(R.array.feed_image);
+
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this) {
             @Override
             protected int getExtraLayoutSpace(RecyclerView.State state) {
@@ -147,7 +151,7 @@ public class MainActivity extends BaseDrawerActivity implements FeedAdapter.OnFe
                 .setStartDelay(300)
                 .setDuration(ANIM_DURATION_FAB)
                 .start();
-        feedAdapter.updateItems(true);
+        feedAdapter.updateItems(imageArray, textArray, true);
     }
 
     @Override

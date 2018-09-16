@@ -36,19 +36,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <android.support.v4.view.ViewPager
-                android:id="@+id/viewPager"
+            <ImageView
+                android:id="@+id/ivFeedCenter"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginBottom="5dp">
-
-                <android.support.design.widget.TabLayout
-                    android:id="@+id/tabLayout"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="bottom|center"
-                    android:layout_margin="10dp" />
-            </android.support.v4.view.ViewPager>
+                android:scaleType="centerCrop" />
 
             <View
                 android:id="@+id/vBgLike"
@@ -99,6 +91,13 @@
                 android:layout_height="48dp"
                 android:background="@drawable/btn_feed_action"
                 android:src="@drawable/ic_more_grey" />
+
+            <ImageButton
+                android:id="@+id/btnBSide"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:background="@drawable/btn_feed_action"
+                android:src="@drawable/ic_done_grey600_24dp" />
 
             <LinearLayout
                 android:layout_width="0dp"

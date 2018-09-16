@@ -32,6 +32,7 @@ import java.util.Random;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import de.hdodenhof.circleimageview.CircleImageView;
 import io.github.froger.instamaterial.R;
 import io.github.froger.instamaterial.Utils;
 import io.github.froger.instamaterial.controllers.GoogleVisionController;
@@ -343,7 +344,7 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         @BindView(R.id.tsLikesCounter)
         TextSwitcher tsLikesCounter;
         @BindView(R.id.ivUserProfile)
-        ImageView ivUserProfile;
+        CircleImageView ivUserProfile;
         @BindView(R.id.vImageRoot)
         FrameLayout vImageRoot;
 

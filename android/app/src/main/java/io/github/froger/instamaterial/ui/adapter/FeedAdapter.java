@@ -239,7 +239,6 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     }
 
     public void updateItems(String[] urls, String[] texts, String[] usernameArray, boolean animated) {
-        Random r = new Random();
 
         feedItems.clear();
         for (int i = 0; i < urls.length; ++i) {

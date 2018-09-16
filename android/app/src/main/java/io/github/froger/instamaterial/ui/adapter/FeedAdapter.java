@@ -24,10 +24,10 @@ import com.google.api.services.vision.v1.model.AnnotateImageResponse;
 import com.google.api.services.vision.v1.model.EntityAnnotation;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.HashMap;
 import java.util.Random;
 
 import butterknife.BindView;
@@ -47,10 +47,9 @@ import io.github.froger.instamaterial.ui.view.LoadingFeedItemView;
 public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     public static final String ACTION_LIKE_BUTTON_CLICKED = "action_like_button_button";
     public static final String ACTION_LIKE_IMAGE_CLICKED = "action_like_image_button";
-
     public static final int VIEW_TYPE_DEFAULT = 1;
     public static final int VIEW_TYPE_LOADER = 2;
-
+    private static final String TAG = FeedAdapter.class.getSimpleName();
     private final List<FeedItem> feedItems = new ArrayList<>();
 
     private Context context;
@@ -140,7 +139,6 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     }
 
     private void addBSide(final int adapterPosition, final String image, final String text) {
-        final NewsData newsData = new NewsData();
         GoogleVisionController.getInstance(context).getLabels(image,
                 new GoogleVisionController.OnImageResponse() {
                     @Override
@@ -172,17 +170,15 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
                             /** if (description.contains("rhino"))
                                 description += " murdered without horn";
-                            if (description.contains("tiger"))
+                            if (orig_description.contains("tiger"))
                                 description += " murdered";
-                            if (description.contains("elephant"))
+                            if (orig_description.contains("elephant"))
                                 description += " killed";
-                            if (description.contains("lion") || description.contains("zebra"))
+                            if (orig_description.contains("lion") || description.contains("zebra"))
                                 description += " dead";
-                            if (description.contains("lion") || description.contains("zebra"))
-                                description += " dead";
-                            if (description.contains("leech"))
+                            if (orig_description.contains("leech"))
                                 description += " cosmetics";
-                            if (description.contains("snail"))
+                            if (orig_description.contains("snail"))
                                 description = "snail cosmetics experiment acid";
                             **/
 
@@ -211,33 +207,36 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                                 QwantImageSearchHelper.qwantImageSearchRequest(context,
                                         description, new QwantImageSearchHelper.QwantImageSearchResolvedCallback() {
                                             @Override
-                                            public void onQwantImageSearchResolved(ArrayList<QwantImage> qwantImages) {
-                                                feedItems.get(adapterPosition).URL = qwantImages.get(0).getMedia();
-
+                                            public void onQwantImageSearchResolved(final ArrayList<QwantImage> qwantImages) {
                                                 handler.postDelayed(new Runnable() {
                                                     @Override
                                                     public void run() {
                                                         if (dialog != null) {
                                                             dialog.cancel();
                                                         }
+                                                        feedItems.get(adapterPosition).URL = qwantImages.get(0).getMedia();
                                                         notifyItemChanged(adapterPosition);
                                                     }
                                                 }, 2500);
                                             }
                                         });
 
-                                ArrayList<String> tags = new ArrayList<String>();
-                                for(String word : description.split(" ")) {
-                                    tags.add(word);
-                                }
+                                ArrayList<String> tags = new ArrayList<>();
+                                Collections.addAll(tags, description.split(" "));
 
-                                newsData.getUrls(context, tags,
-                                        new NewsData.OnNewsURLsResolved() {
+                                NewsData.getUrls(context, tags, new NewsData.OnNewsURLsResolved() {
                                     @Override
-                                    public void onNewsURLsResolved(ArrayList<String> urls) {
-                                        feedItems.get(adapterPosition).text = urls.toString();
-                                        notifyItemChanged(adapterPosition);
-                                        Log.e("TAG", urls.toString());
+                                    public void onNewsURLsResolved(final ArrayList<String> urls) {
+                                        handler.postDelayed(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                if (dialog != null) {
+                                                    dialog.cancel();
+                                                }
+                                                feedItems.get(adapterPosition).text = urls.get(0);
+                                                notifyItemChanged(adapterPosition);
+                                            }
+                                        }, 2500);
                                     }
                                 });
                             }
@@ -289,7 +288,7 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             String text = "";
             if (i < texts.length) text = texts[i];
             else text = texts[0];
-            feedItems.add(new FeedItem(urls[i],text,usernameArray[r.nextInt(5)],random_likes, false));
+            feedItems.add(new FeedItem(urls[i], text, usernameArray[r.nextInt(5)], random_likes, false));
         }
         if (animated) {
             notifyItemRangeInserted(0, feedItems.size());

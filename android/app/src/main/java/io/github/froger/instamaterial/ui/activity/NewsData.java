@@ -13,7 +13,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import io.github.froger.instamaterial.controllers.VolleyController;
 
@@ -38,7 +37,7 @@ public class NewsData {
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        ArrayList<String> urls = new ArrayList<String>();
+                        ArrayList<String> urls;
                         try {
                             JSONObject json = new JSONObject(response.toString());
                             JSONArray data = (JSONArray) json.get("articles");
@@ -62,7 +61,7 @@ public class NewsData {
         ArrayList<String> urls = new ArrayList<String>();
         for (int i = 0; i < data.length(); i++) {
             try {
-                JSONObject article = (JSONObject) data.getJSONObject(i);
+                JSONObject article = data.getJSONObject(i);
                 String url = article.getString("url");
                 urls.add(url);
             } catch (JSONException e) {

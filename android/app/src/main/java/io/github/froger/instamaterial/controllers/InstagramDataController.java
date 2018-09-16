@@ -1,4 +1,4 @@
-package io.github.froger.instamaterial.ui.activity;
+package io.github.froger.instamaterial.controllers;
 
 import android.content.Context;
 import android.util.Log;
@@ -14,14 +14,12 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-import io.github.froger.instamaterial.controllers.VolleyController;
-
 /**
  * Created by Albert on 16/9/2018.
  */
 
-public class InstagramData {
-    private static final String TAG = InstagramData.class.getSimpleName();
+public class InstagramDataController {
+    private static final String TAG = InstagramDataController.class.getSimpleName();
     private static final String API_TOKEN = "288757825.37f6a41.467aaa07edf34eed802f6f8a5ca46ede";
     private static final String BASE_URL = "https://api.instagram.com/v1/users/self/media/recent/?access_token=";
 

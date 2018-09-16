@@ -21,6 +21,7 @@ import butterknife.BindView;
 import butterknife.OnClick;
 import io.github.froger.instamaterial.R;
 import io.github.froger.instamaterial.Utils;
+import io.github.froger.instamaterial.controllers.InstagramDataController;
 import io.github.froger.instamaterial.ui.adapter.FeedAdapter;
 import io.github.froger.instamaterial.ui.adapter.FeedItemAnimator;
 import io.github.froger.instamaterial.ui.view.FeedContextMenu;
@@ -28,7 +29,7 @@ import io.github.froger.instamaterial.ui.view.FeedContextMenuManager;
 
 
 public class MainActivity extends BaseDrawerActivity implements FeedAdapter.OnFeedItemClickListener,
-        FeedContextMenu.OnFeedContextMenuItemClickListener, InstagramData.OnInstagramURLsResolved {
+        FeedContextMenu.OnFeedContextMenuItemClickListener, InstagramDataController.OnInstagramURLsResolved {
     public static final String ACTION_SHOW_LOADING_ITEM = "action_show_loading_item";
     private static final String TAG = MainActivity.class.getSimpleName();
     private static final int ANIM_DURATION_TOOLBAR = 300;
@@ -59,8 +60,8 @@ public class MainActivity extends BaseDrawerActivity implements FeedAdapter.OnFe
             feedAdapter.updateItems(imageArray, textArray, false);
         }
 
-        InstagramData urlsgetter = new InstagramData();
-        InstagramData.getUrls(this, this);
+        InstagramDataController urlsgetter = new InstagramDataController();
+        InstagramDataController.getUrls(this, this);
     }
 
     private void setupFeed() {
@@ -213,6 +214,7 @@ public class MainActivity extends BaseDrawerActivity implements FeedAdapter.OnFe
 
     @Override
     public void onInstagramURLsResolved(ArrayList<String> urls) {
+        imageArray = urls.toArray(new String[0]);
         for (int i = 0; i < urls.size(); ++i) {
             Log.e(TAG, urls.get(i));
         }
